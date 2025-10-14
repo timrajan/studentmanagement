@@ -1,0 +1,290 @@
+@model StudentManagement.Models.Student
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Student</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #2196F3;
+            padding-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 700px;
+        }
+        
+        .info-box {
+            background-color: #E3F2FD;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+        
+        .info-box-title {
+            font-weight: bold;
+            color: #1976D2;
+            margin-bottom: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 15px;
+        }
+        
+        .field-description {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+        
+        select {
+            cursor: pointer;
+        }
+        
+        .required {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .submit-btn {
+            background-color: #2196F3;
+            color: white;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .submit-btn:hover {
+            background-color: #1976D2;
+        }
+        
+        .cancel-btn {
+            background-color: #9E9E9E;
+            color: white;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #757575;
+        }
+        
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+    <h1>👤 Add New Student</h1>
+    <p class="subtitle">👥 Team Admin Action: Add a student to your team</p>
+    
+    <div class="form-container">
+        
+        <div class="info-box">
+            <div class="info-box-title">ℹ️ Adding a Student</div>
+            <div>
+                Once added, the student will be able to:<br>
+                • View other students in their team<br>
+                • Create study records (if assigned Creator role)<br>
+                • View study records in their team<br>
+                • Collaborate with team members
+            </div>
+        </div>
+        
+        @if (ViewBag.Error != null)
+        {
+            <div class="error-message">
+                ⚠️ @ViewBag.Error
+            </div>
+        }
+        
+        <form method="post" action="/Student/Create">
+            
+            <div class="form-group">
+                <label for="TeamId">
+                    Assign to Team <span class="required">*</span>
+                </label>
+                <div class="field-description">
+                    Select which team this student belongs to
+                </div>
+                <select id="TeamId" name="TeamId" required>
+                    <option value="">-- Select Team --</option>
+                    @foreach (var team in (List<StudentManagement.Models.Team>)ViewBag.Teams)
+                    {
+                        @if (Model?.TeamId == team.Id)
+                        {
+                            <option value="@team.Id" selected>@team.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@team.Id">@team.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="Name">
+                    Student Name <span class="required">*</span>
+                </label>
+                <div class="field-description">
+                    Full name of the student
+                </div>
+                <input type="text" 
+                       id="Name" 
+                       name="Name" 
+                       placeholder="e.g., John Smith"
+                       value="@Model?.Name"
+                       required 
+                       maxlength="100" />
+            </div>
+            
+            <div class="form-group">
+                <label for="Email">
+                    Email Address <span class="required">*</span>
+                </label>
+                <div class="field-description">
+                    Student's email for communication and login
+                </div>
+                <input type="email" 
+                       id="Email" 
+                       name="Email" 
+                       placeholder="e.g., john.smith@school.com"
+                       value="@Model?.Email"
+                       required 
+                       maxlength="100" />
+            </div>
+            
+            <div class="form-group">
+                <label for="Role">
+                    Student Role <span class="required">*</span>
+                </label>
+                <div class="field-description">
+                    Determines what the student can do with study records
+                </div>
+                <select id="Role" name="Role" required>
+                    <option value="">-- Select Role --</option>
+                    @if (Model?.Role == "Creator")
+                    {
+                        <option value="Creator" selected>
+                            Creator (Can create and view study records)
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="Creator">
+                            Creator (Can create and view study records)
+                        </option>
+                    }
+                    
+                    @if (Model?.Role == "Viewer" || Model == null)
+                    {
+                        <option value="Viewer" selected>
+                            Viewer (Can only view study records)
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="Viewer">
+                            Viewer (Can only view study records)
+                        </option>
+                    }
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="PhoneNumber">
+                    Phone Number (Optional)
+                </label>
+                <div class="field-description">
+                    Contact number for the student
+                </div>
+                <input type="tel" 
+                       id="PhoneNumber" 
+                       name="PhoneNumber" 
+                       placeholder="e.g., (555) 123-4567"
+                       value="@Model?.PhoneNumber"
+                       maxlength="20" />
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="submit-btn">
+                    ✅ Add Student
+                </button>
+                <a href="/Student/Index" class="cancel-btn">
+                    ❌ Cancel
+                </a>
+            </div>
+            
+        </form>
+    </div>
+</body>
+</html>

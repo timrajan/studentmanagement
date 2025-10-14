@@ -1,0 +1,107 @@
+@model List<StudentManagement.Models.Student>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Students by Team</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .team-section {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .team-header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .student-item {
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #fafafa;
+            border-left: 3px solid #2196F3;
+            border-radius: 4px;
+        }
+        
+        .student-name {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+        
+        .student-email {
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📚 Students Organized by Team</h1>
+    
+    @* Group students by TeamId *@
+    @{
+        var team1Students = Model.Where(s => s.TeamId == 1).ToList();
+        var team2Students = Model.Where(s => s.TeamId == 2).ToList();
+    }
+    
+    @* Display Team 1 *@
+    <div class="team-section">
+        <div class="team-header">🔵 Team 1: Alpha Team</div>
+        @if (team1Students.Count == 0)
+        {
+            <p>No students in this team yet.</p>
+        }
+        else
+        {
+            @foreach (var student in team1Students)
+            {
+                <div class="student-item">
+                    <div class="student-name">👤 @student.Name</div>
+                    <div class="student-email">📧 @student.Email</div>
+                </div>
+            }
+        }
+    </div>
+    
+    @* Display Team 2 *@
+    <div class="team-section">
+        <div class="team-header">🟢 Team 2: Beta Team</div>
+        @if (team2Students.Count == 0)
+        {
+            <p>No students in this team yet.</p>
+        }
+        else
+        {
+            @foreach (var student in team2Students)
+            {
+                <div class="student-item">
+                    <div class="student-name">👤 @student.Name</div>
+                    <div class="student-email">📧 @student.Email</div>
+                </div>
+            }
+        }
+    </div>
+    
+    <p><a href="/Student/Index">← Back to All Students</a></p>
+</body>
+</html>

@@ -1,0 +1,260 @@
+@model StudentManagement.Models.StudyRecord
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Log Study Session</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .field-description {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        
+        .cancel-btn {
+            background-color: #9E9E9E;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            margin-left: 10px;
+            display: inline-block;
+        }
+        
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .required {
+            color: red;
+        }
+        
+        .nav-links {
+            margin: 20px 0;
+        }
+        
+        .nav-links a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+        
+        .info-box {
+            background-color: #FFF9C4;
+            border-left: 4px solid #FBC02D;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .warning-box {
+            background-color: #FFEBEE;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📝 Log Your Study Session</h1>
+    
+    <div class="nav-links">
+        <a href="/StudyRecord/Index">← Back to All Records</a>
+    </div>
+    
+    <div class="form-container">
+        
+        @if (ViewBag.Students == null || ViewBag.Students.Count == 0)
+        {
+            <div class="warning-box">
+                <strong>⚠️ No Students with Creator Role</strong><br>
+                There are no students with the "Creator" role who can create study records.<br>
+                A Team Admin must first add students with Creator role.
+            </div>
+            <a href="/Student/Index" class="cancel-btn">Go to Students</a>
+        }
+        else
+        {
+            <div class="info-box">
+                <strong>ℹ️ Note:</strong> Only students with "Creator" role can log study sessions.
+            </div>
+            
+            @if (ViewBag.Error != null)
+            {
+                <div class="error-message">
+                    ⚠️ @ViewBag.Error
+                </div>
+            }
+            
+            <form method="post" action="/StudyRecord/Create">
+                
+                <div class="form-group">
+                    <label for="StudentId">
+                        Student <span class="required">*</span>
+                    </label>
+                    <div class="field-description">
+                        Only students with 'Creator' role can create study records
+                    </div>
+                    <select id="StudentId" name="StudentId" required>
+                        <option value="">-- Select Student --</option>
+                        @foreach (var student in (List<StudentManagement.Models.Student>)ViewBag.Students)
+                        {
+                            @if (ViewBag.SelectedStudentId != null && ViewBag.SelectedStudentId == student.Id)
+                            {
+                                <option value="@student.Id" selected>
+                                    @student.Name (@student.Email)
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="@student.Id">
+                                    @student.Name (@student.Email)
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="Subject">
+                        Subject <span class="required">*</span>
+                    </label>
+                    <input type="text" 
+                           id="Subject" 
+                           name="Subject" 
+                           placeholder="e.g., Mathematics, Physics, Computer Science"
+                           value="@Model?.Subject"
+                           required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="Topic">
+                        Topic <span class="required">*</span>
+                    </label>
+                    <input type="text" 
+                           id="Topic" 
+                           name="Topic" 
+                           placeholder="e.g., Linear Algebra, ASP.NET MVC"
+                           value="@Model?.Topic"
+                           required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="HoursSpent">
+                        Hours Spent <span class="required">*</span>
+                    </label>
+                    <input type="number" 
+                           id="HoursSpent" 
+                           name="HoursSpent" 
+                           step="0.5" 
+                           min="0.5" 
+                           max="24"
+                           placeholder="e.g., 2.5"
+                           value="@Model?.HoursSpent"
+                           required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="StudyDate">
+                        Study Date <span class="required">*</span>
+                    </label>
+                    <input type="date" 
+                           id="StudyDate" 
+                           name="StudyDate" 
+                           value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                           required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="Notes">
+                        Notes (Optional)
+                    </label>
+                    <textarea id="Notes" 
+                              name="Notes" 
+                              placeholder="Any observations, thoughts, or areas for improvement...">@Model?.Notes</textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    ✅ Save Study Record
+                </button>
+                
+                <a href="/StudyRecord/Index" class="cancel-btn">
+                    ❌ Cancel
+                </a>
+                
+            </form>
+        }
+    </div>
+</body>
+</html>

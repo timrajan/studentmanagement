@@ -1,0 +1,93 @@
+@model List<StudentManagement.Models.Student>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .student-card {
+            background-color: white;
+            border-left: 4px solid #4CAF50;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .student-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .student-info {
+            color: #666;
+            margin: 5px 0;
+        }
+        
+        .team-badge {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .no-students {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h1>📚 Student Management System</h1>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div style="background-color: #4CAF50; color: white; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+            ✅ @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <p>Total Students: <strong>@Model.Count</strong></p>
+        <a href="/Student/Create" style="background-color: #2196F3; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+            ➕ Add New Student
+        </a>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <div class="no-students">
+            <p>No students found. Time to enroll some students!</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var student in Model)
+        {
+            <div class="student-card">
+                <div class="student-name">👤 @student.Name</div>
+                <div class="student-info">📧 Email: @student.Email</div>
+                <div class="student-info">📅 Enrolled: @student.EnrollmentDate.ToString("MMMM dd, yyyy")</div>
+                <span class="team-badge">Team @student.TeamId</span>
+            </div>
+        }
+    }
+</body>
+</html>
