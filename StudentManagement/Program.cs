@@ -1,7 +1,20 @@
+using StudentManagement.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add session support
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// Register DataService as a singleton (shared across all requests)
+builder.Services.AddSingleton<DataService>();
 
 var app = builder.Build();
 
@@ -17,6 +30,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Enable session
+app.UseSession();
 
 app.UseAuthorization();
 

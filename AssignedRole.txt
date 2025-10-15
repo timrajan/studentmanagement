@@ -1,0 +1,2 @@
+TeamAdmin=User
+TeamMember=Timot

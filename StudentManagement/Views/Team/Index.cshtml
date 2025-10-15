@@ -1,238 +1,188 @@
 @model List<StudentManagement.Models.Team>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>All Teams</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f5f5f5;
-        }
-        
-        h1 {
-            color: #333;
-            border-bottom: 3px solid #FF5722;
-            padding-bottom: 10px;
-        }
-        
-        .success-message {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .create-btn {
-            background-color: #FF5722;
-            color: white;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-        
-        .create-btn:hover {
-            background-color: #E64A19;
-        }
-        
-        .team-card {
-            background-color: white;
-            padding: 25px;
-            margin: 15px 0;
-            border-left: 5px solid #FF5722;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .team-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .team-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        
-        .team-id {
-            background-color: #FF5722;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-        
-        .team-description {
-            color: #666;
-            font-size: 16px;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-left: 3px solid #ddd;
-        }
-        
-        .admins-section {
-            margin-top: 15px;
-            padding: 15px;
-            background-color: #fff3e0;
-            border-radius: 4px;
-        }
-        
-        .admins-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .admins-title {
-            font-weight: bold;
-            color: #E65100;
-        }
-        
-        .add-admin-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 5px 15px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-        
-        .add-admin-btn:hover {
-            background-color: #45a049;
-        }
-        
-        .admin-item {
-            padding: 8px 12px;
-            margin: 5px 0;
-            background-color: white;
-            border-left: 3px solid #4CAF50;
-            border-radius: 3px;
-        }
-        
-        .admin-name {
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .admin-email {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .meta-info {
-            color: #999;
-            font-size: 14px;
-            margin-top: 15px;
-        }
-        
-        .no-teams {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-        
-        .nav-links {
-            margin: 20px 0;
-        }
-        
-        .nav-links a {
-            color: #2196F3;
-            text-decoration: none;
-            margin-right: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h1>🏢 All Teams</h1>
-    
-    <div class="nav-links">
-        <a href="/Student/Index">View Students</a>
-        <a href="/StudyRecord/Index">View Study Records</a>
-    </div>
-    
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="success-message">
-            ✅ @TempData["SuccessMessage"]
-        </div>
+@{
+    var role = ViewBag.Role ?? "TeamAdmin";
+    ViewData["Title"] = role == "SuperAdmin" ? "Teams Management" : "Team Management";
+}
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
     }
-    
-    <div class="header-section">
-        <p><strong>Total Teams: @Model.Count</strong></p>
-        <a href="/Team/Create" class="create-btn">➕ Create New Team</a>
-    </div>
-    
-    @if (Model.Count == 0)
-    {
-        <div class="no-teams">
-            <p>No teams yet. Create your first team to get started!</p>
-        </div>
+
+    .page-title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #000;
+        margin: 0;
     }
-    else
-    {
-        @foreach (var team in Model.OrderByDescending(t => t.CreatedDate))
+
+    .add-team-btn {
+        background-color: #4054B5;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 40px;
+        font-size: 16px;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-block;
+    }
+
+    .add-team-btn:hover {
+        background-color: #2f3f8f;
+        box-shadow: 0 4px 12px rgba(64, 84, 181, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 15px;
+    }
+
+    .remove-team-btn {
+        background-color: #4054B5;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 40px;
+        font-size: 16px;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-block;
+    }
+
+    .remove-team-btn:hover {
+        background-color: #2f3f8f;
+        box-shadow: 0 4px 12px rgba(64, 84, 181, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .teams-table {
+        margin-top: 40px;
+    }
+
+    .table-header {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 40px;
+        margin-bottom: 20px;
+    }
+
+    .header-label {
+        font-weight: bold;
+        font-size: 18px;
+        color: #000;
+    }
+
+    .team-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 40px;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .team-name {
+        font-size: 18px;
+        font-weight: 500;
+        color: #000;
+    }
+
+    .admin-textbox {
+        width: 100%;
+        max-width: 500px;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: 2px solid #000;
+        border-radius: 25px;
+        background-color: white;
+        color: #000;
+        outline: none;
+        cursor: default;
+    }
+
+    .admin-textbox:focus {
+        border-color: #000;
+    }
+
+    .no-teams {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+        font-size: 18px;
+    }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">@(role == "SuperAdmin" ? "Teams Management" : "Team Management")</h1>
+    <div class="button-group">
+        @if (role == "SuperAdmin")
         {
-            @* Get all admins for this team *@
-            var teamAdminsList = ((List<StudentManagement.Models.TeamAdmin>)ViewBag.TeamAdmins)
-                .Where(a => a.TeamId == team.Id)
-                .ToList();
-            
-            <div class="team-card">
-                <div class="team-header">
-                    <div class="team-name">🏆 @team.Name</div>
-                    <div class="team-id">Team ID: @team.Id</div>
-                </div>
-                
-                <div class="team-description">
-                    📝 @team.Description
-                </div>
-                
-                <div class="admins-section">
-                    <div class="admins-header">
-                        <div class="admins-title">
-                            👥 Team Admins (@teamAdminsList.Count)
-                        </div>
-                        <a href="/Team/AddAdmin?teamId=@team.Id" class="add-admin-btn">
-                            ➕ Add Admin
-                        </a>
-                    </div>
-                    
-                    @if (teamAdminsList.Count == 0)
-                    {
-                        <p style="color: #999;">No admins assigned yet.</p>
-                    }
-                    else
-                    {
-                        @foreach (var admin in teamAdminsList.OrderBy(a => a.AddedDate))
-                        {
-                            <div class="admin-item">
-                                <div class="admin-name">👤 @admin.Name</div>
-                                <div class="admin-email">📧 @admin.Email</div>
-                            </div>
-                        }
-                    }
-                </div>
-                
-                <div class="meta-info">
-                    📅 Created on: @team.CreatedDate.ToString("MMMM dd, yyyy")
-                </div>
-            </div>
+            <a href="/Team/Create" class="add-team-btn">Add Team</a>
+            <a href="/Team/Remove" class="remove-team-btn">Remove Team</a>
         }
-    }
-</body>
-</html>
+        else
+        {
+            <a href="/Team/AddMember" class="add-team-btn">Add Team Member</a>
+            <a href="/Team/RemoveMember" class="remove-team-btn">Remove Team Member</a>
+        }
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="no-teams">
+        <p>No teams yet. Create your first team to get started!</p>
+    </div>
+}
+else
+{
+    <div class="teams-table">
+        <div class="table-header">
+            <div class="header-label">Name</div>
+            <div class="header-label">@(role == "SuperAdmin" ? "Admins" : "Team Member")</div>
+        </div>
+
+        @foreach (var team in Model.OrderBy(t => t.Name))
+        {
+            @if (role == "SuperAdmin")
+            {
+                @* SuperAdmin view: Show team admins *@
+                var teamAdminsList = ((List<StudentManagement.Models.TeamAdmin>)ViewBag.TeamAdmins)
+                    .Where(a => a.TeamId == team.Id)
+                    .ToList();
+
+                var adminNames = string.Join(", ", teamAdminsList.Select(a => a.Name));
+
+                <div class="team-row">
+                    <div class="team-name">@team.Name</div>
+                    <input type="text" class="admin-textbox" value="@adminNames" readonly />
+                </div>
+            }
+            else
+            {
+                @* TeamAdmin view: Show team members (students) *@
+                var teamStudents = ((List<StudentManagement.Models.Student>)ViewBag.Students)
+                    .Where(s => s.TeamId == team.Id)
+                    .ToList();
+
+                var memberNames = string.Join(", ", teamStudents.Select(s => s.Name));
+
+                <div class="team-row">
+                    <div class="team-name">@team.Name</div>
+                    <input type="text" class="admin-textbox" value="@memberNames" readonly />
+                </div>
+            }
+        }
+    </div>
+}

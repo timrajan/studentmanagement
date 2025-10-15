@@ -9,75 +9,99 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = StudentManagement
 build_property.RootNamespace = StudentManagement
-build_property.ProjectDir = /Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/
+build_property.ProjectDir = C:\Users\User\Documents\studentmanagement\StudentManagement\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = /Users/timothyrajanalex/Documents/studentmanagement/StudentManagement
+build_property.MSBuildProjectDirectory = C:\Users\User\Documents\studentmanagement\StudentManagement
 build_property._RazorSourceGeneratorDebug = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Shared/Error.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Shared/_ValidationScriptsPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Student/ByTeam.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZGVudC9CeVRlYW0uY3NodG1s
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/SportsRecord/ByStudent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BvcnRzUmVjb3JkXEJ5U3R1ZGVudC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Student/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZGVudC9DcmVhdGUuY3NodG1s
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/SportsRecord/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BvcnRzUmVjb3JkXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Student/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZGVudC9JbmRleC5jc2h0bWw=
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/SportsRecord/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BvcnRzUmVjb3JkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/StudyRecord/ByStudent.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZHlSZWNvcmQvQnlTdHVkZW50LmNzaHRtbA==
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Student/ByTeam.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxCeVRlYW0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/StudyRecord/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZHlSZWNvcmQvQ3JlYXRlLmNzaHRtbA==
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Student/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/StudyRecord/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZHlSZWNvcmQvSW5kZXguY3NodG1s
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Student/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Team/AddAdmin.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVGVhbS9BZGRBZG1pbi5jc2h0bWw=
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/StudyRecord/ByStudent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZHlSZWNvcmRcQnlTdHVkZW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Team/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVGVhbS9DcmVhdGUuY3NodG1s
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/StudyRecord/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZHlSZWNvcmRcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Team/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVGVhbS9JbmRleC5jc2h0bWw=
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/StudyRecord/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZHlSZWNvcmRcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Team/AddAdmin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhbVxBZGRBZG1pbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Team/AddMember.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhbVxBZGRNZW1iZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/timothyrajanalex/Documents/studentmanagement/StudentManagement/Views/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = b-b4homl2sru
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Team/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhbVxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Team/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhbVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Team/Remove.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhbVxSZW1vdmUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Team/RemoveMember.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhbVxSZW1vdmVNZW1iZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-y9obw7rtys

@@ -1,253 +1,106 @@
 @model StudentManagement.Models.Team
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create New Team</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f5f5f5;
-        }
-        
-        h1 {
-            color: #333;
-            border-bottom: 3px solid #FF5722;
-            padding-bottom: 10px;
-        }
-        
-        .subtitle {
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 30px;
-        }
-        
-        .form-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            max-width: 700px;
-        }
-        
-        .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #FF5722;
-            margin: 25px 0 15px 0;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #FFE0DB;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #333;
-            font-size: 15px;
-        }
-        
-        .field-description {
-            color: #999;
-            font-size: 13px;
-            margin-bottom: 5px;
-        }
-        
-        input[type="text"],
-        input[type="email"],
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #FF5722;
-        }
-        
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-            font-family: Arial, sans-serif;
-        }
-        
-        .required {
-            color: red;
-            font-weight: bold;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-        }
-        
-        .submit-btn {
-            background-color: #FF5722;
-            color: white;
-            padding: 14px 35px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            flex: 1;
-        }
-        
-        .submit-btn:hover {
-            background-color: #E64A19;
-        }
-        
-        .cancel-btn {
-            background-color: #9E9E9E;
-            color: white;
-            padding: 14px 35px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            text-decoration: none;
-            text-align: center;
-            cursor: pointer;
-            flex: 1;
-        }
-        
-        .cancel-btn:hover {
-            background-color: #757575;
-        }
-        
-        .error-message {
-            background-color: #f44336;
-            color: white;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 25px;
-        }
-        
-        .info-box {
-            background-color: #E3F2FD;
-            border-left: 4px solid #2196F3;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 4px;
-        }
-        
-        .info-box-title {
-            font-weight: bold;
-            color: #1976D2;
-            margin-bottom: 5px;
-        }
-    </style>
-</head>
-<body>
-    <h1>➕ Create New Team</h1>
-    <p class="subtitle">🔐 Super Admin Action: Set up a new team with at least one Team Admin</p>
-    
-    <div class="form-container">
-        
-        <div class="info-box">
-            <div class="info-box-title">ℹ️ What happens after creating a team?</div>
-            <div>
-                1. A new team will be created in the system<br>
-                2. The first Team Admin will be assigned<br>
-                3. You can add more Team Admins later<br>
-                4. Team Admins will be able to manage students in this team
-            </div>
-        </div>
-        
-        @if (ViewBag.Error != null)
-        {
-            <div class="error-message">
-                ⚠️ @ViewBag.Error
-            </div>
-        }
-        
-        <form method="post" action="/Team/Create">
-            
-            <div class="section-title">🏢 Team Information</div>
-            
-            <div class="form-group">
-                <label for="Name">
-                    Team Name <span class="required">*</span>
-                </label>
-                <div class="field-description">
-                    Give your team a clear, memorable name
-                </div>
-                <input type="text" 
-                       id="Name" 
-                       name="Name" 
-                       placeholder="e.g., Engineering Team, Marketing Squad, Research Group"
-                       value="@Model?.Name"
-                       required 
-                       maxlength="100" />
-            </div>
-            
-            <div class="form-group">
-                <label for="Description">
-                    Team Description <span class="required">*</span>
-                </label>
-                <div class="field-description">
-                    Describe what this team focuses on or their responsibilities
-                </div>
-                <textarea id="Description" 
-                          name="Description" 
-                          placeholder="e.g., This team focuses on building and maintaining our web applications using modern technologies..."
-                          required 
-                          maxlength="500">@Model?.Description</textarea>
-            </div>
-            
-            <div class="section-title">👤 First Team Admin</div>
-            
-            <div class="form-group">
-                <label for="adminName">
-                    Admin Name <span class="required">*</span>
-                </label>
-                <div class="field-description">
-                    Who will be the first admin for this team? (You can add more later)
-                </div>
-                <input type="text" 
-                       id="adminName" 
-                       name="adminName" 
-                       placeholder="e.g., John Smith"
-                       required 
-                       maxlength="100" />
-            </div>
-            
-            <div class="form-group">
-                <label for="adminEmail">
-                    Admin Email <span class="required">*</span>
-                </label>
-                <div class="field-description">
-                    Email address for the Team Admin
-                </div>
-                <input type="email" 
-                       id="adminEmail" 
-                       name="adminEmail" 
-                       placeholder="e.g., john.smith@school.com"
-                       required 
-                       maxlength="100" />
-            </div>
-            
-            <div class="button-group">
-                <button type="submit" class="submit-btn">
-                    ✅ Create Team
-                </button>
-                <a href="/Team/Index" class="cancel-btn">
-                    ❌ Cancel
-                </a>
-            </div>
-            
-        </form>
+@{
+    ViewData["Title"] = "Add Team";
+}
+
+<style>
+    .page-title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 60px;
+    }
+
+    .form-container {
+        max-width: 600px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 40px;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+    .form-label {
+        font-size: 18px;
+        font-weight: 500;
+        color: #000;
+    }
+
+    .form-input {
+        padding: 10px 15px;
+        font-size: 16px;
+        border: 2px solid #000;
+        border-radius: 5px;
+        background-color: white;
+        color: #000;
+        outline: none;
+        width: 300px;
+    }
+
+    .form-input:focus {
+        border-color: #000;
+    }
+
+    .create-btn {
+        background-color: white;
+        color: #000;
+        border: 2px solid #000;
+        border-radius: 25px;
+        padding: 12px 40px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-left: 240px;
+        margin-top: 40px;
+    }
+
+    .create-btn:hover {
+        background-color: #000;
+        color: white;
+    }
+
+    .error-message {
+        background-color: #f44336;
+        color: white;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 25px;
+    }
+</style>
+
+<h1 class="page-title">Add Team</h1>
+
+@if (ViewBag.Error != null)
+{
+    <div class="error-message">
+        @ViewBag.Error
     </div>
-</body>
-</html>
+}
+
+<form method="post" action="/Team/Create" class="form-container">
+    <div class="form-row">
+        <label for="Name" class="form-label">Team Name</label>
+        <input type="text"
+               id="Name"
+               name="Name"
+               class="form-input"
+               value="@Model?.Name"
+               required />
+    </div>
+
+    <div class="form-row">
+        <label for="adminName" class="form-label">Admin Name</label>
+        <input type="text"
+               id="adminName"
+               name="adminName"
+               class="form-input"
+               required />
+    </div>
+
+    <button type="submit" class="create-btn">Create Team</button>
+</form>

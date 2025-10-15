@@ -1,0 +1,260 @@
+@model StudentManagement.Models.SportsRecord
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Log Sports Activity</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #FF5722;
+            padding-bottom: 10px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .field-description {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            background-color: #FF5722;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #E64A19;
+        }
+
+        .cancel-btn {
+            background-color: #9E9E9E;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            margin-left: 10px;
+            display: inline-block;
+        }
+
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .required {
+            color: red;
+        }
+
+        .nav-links {
+            margin: 20px 0;
+        }
+
+        .nav-links a {
+            color: #FF5722;
+            text-decoration: none;
+        }
+
+        .info-box {
+            background-color: #FFF3E0;
+            border-left: 4px solid #FF9800;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background-color: #FFEBEE;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚽ Log Your Sports Activity</h1>
+
+    <div class="nav-links">
+        <a href="/SportsRecord/Index">← Back to All Records</a>
+    </div>
+
+    <div class="form-container">
+
+        @if (ViewBag.Students == null || ViewBag.Students.Count == 0)
+        {
+            <div class="warning-box">
+                <strong>⚠️ No Students with Creator Role</strong><br>
+                There are no students with the "Creator" role who can create sports records.<br>
+                A Team Admin must first add students with Creator role.
+            </div>
+            <a href="/Student/Index" class="cancel-btn">Go to Students</a>
+        }
+        else
+        {
+            <div class="info-box">
+                <strong>ℹ️ Note:</strong> Only students with "Creator" role can log sports activities.
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="error-message">
+                    ⚠️ @ViewBag.Error
+                </div>
+            }
+
+            <form method="post" action="/SportsRecord/Create">
+
+                <div class="form-group">
+                    <label for="StudentId">
+                        Student <span class="required">*</span>
+                    </label>
+                    <div class="field-description">
+                        Only students with 'Creator' role can create sports records
+                    </div>
+                    <select id="StudentId" name="StudentId" required>
+                        <option value="">-- Select Student --</option>
+                        @foreach (var student in (List<StudentManagement.Models.Student>)ViewBag.Students)
+                        {
+                            @if (ViewBag.SelectedStudentId != null && ViewBag.SelectedStudentId == student.Id)
+                            {
+                                <option value="@student.Id" selected>
+                                    @student.Name (@student.Email)
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="@student.Id">
+                                    @student.Name (@student.Email)
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="SportName">
+                        Sport Name <span class="required">*</span>
+                    </label>
+                    <input type="text"
+                           id="SportName"
+                           name="SportName"
+                           placeholder="e.g., Basketball, Soccer, Tennis"
+                           value="@Model?.SportName"
+                           required />
+                </div>
+
+                <div class="form-group">
+                    <label for="ActivityType">
+                        Activity Type <span class="required">*</span>
+                    </label>
+                    <input type="text"
+                           id="ActivityType"
+                           name="ActivityType"
+                           placeholder="e.g., Practice, Match, Training"
+                           value="@Model?.ActivityType"
+                           required />
+                </div>
+
+                <div class="form-group">
+                    <label for="HoursSpent">
+                        Hours Spent <span class="required">*</span>
+                    </label>
+                    <input type="number"
+                           id="HoursSpent"
+                           name="HoursSpent"
+                           step="0.5"
+                           min="0.5"
+                           max="24"
+                           placeholder="e.g., 2.5"
+                           value="@Model?.HoursSpent"
+                           required />
+                </div>
+
+                <div class="form-group">
+                    <label for="ActivityDate">
+                        Activity Date <span class="required">*</span>
+                    </label>
+                    <input type="date"
+                           id="ActivityDate"
+                           name="ActivityDate"
+                           value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                           required />
+                </div>
+
+                <div class="form-group">
+                    <label for="Notes">
+                        Notes (Optional)
+                    </label>
+                    <textarea id="Notes"
+                              name="Notes"
+                              placeholder="Any highlights, achievements, or areas for improvement...">@Model?.Notes</textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    ✅ Save Sports Record
+                </button>
+
+                <a href="/SportsRecord/Index" class="cancel-btn">
+                    ❌ Cancel
+                </a>
+
+            </form>
+        }
+    </div>
+</body>
+</html>

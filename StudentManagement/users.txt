@@ -1,0 +1,12 @@
+# User Role Configuration File
+# Format: username=role
+# Valid roles: SuperAdmin, TeamAdmin, Student
+# The username should match your Windows login username
+
+# Example configurations:
+User=TeamAdmin
+User1=SuperAdmin
+student1=Student
+
+# Add your Windows username below:
+# YourWindowsUsername=SuperAdmin

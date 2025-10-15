@@ -1,142 +1,65 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    var role = ViewBag.Role ?? "SuperAdmin";
+    ViewData["Title"] = role == "Student" ? "Student - Home Page" :
+                        role == "TeamAdmin" ? "Team Admin - Home Page" :
+                        "Super Admin - Home Page";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 50px;
-        }
-        
-        .header h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            font-size: 20px;
-            opacity: 0.9;
-        }
-        
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-        }
-        
-        .card-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        
-        .card h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
-        
-        .card p {
-            color: #666;
-            line-height: 1.6;
-        }
-        
-        .card-footer {
-            margin-top: 20px;
-            color: #667eea;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
+<style>
+    .home-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+        padding: 40px;
+    }
 
-<div style="margin: 20px; padding: 20px; background: #f5f5f5; border-radius: 8px;">
-    <h2>Quick Links</h2>
-    <ul style="list-style: none; padding: 0;">
-        <li style="margin: 10px 0;">
-            <a href="/Team/Index" style="font-size: 18px; color: #FF5722;">🏢 Manage Teams</a>
-        </li>
-        <li style="margin: 10px 0;">
-            <a href="/Student/Index" style="font-size: 18px; color: #2196F3;">👥 Manage Students</a>
-        </li>
-        <li style="margin: 10px 0;">
-            <a href="/StudyRecord/Index" style="font-size: 18px; color: #4CAF50;">📖 View Study Records</a>
-        </li>
-    </ul>
-</div>
+    .cards-container {
+        display: flex;
+        gap: 80px;
+        align-items: center;
+        justify-content: center;
+    }
 
-    <div class="container">
-        <div class="header">
-            <h1>📚 Student Management System</h1>
-            <p>Manage teams, students, and study records efficiently</p>
-        </div>
-        
-        <div class="cards">
-            <a href="/Team/Index" class="card">
-                <div class="card-icon">🏢</div>
-                <h2>Teams</h2>
-                <p>Create and manage teams. Assign team administrators who can manage students within their teams.</p>
-                <div class="card-footer">Manage Teams →</div>
-            </a>
-            
-            <a href="/Student/Index" class="card">
-                <div class="card-icon">👥</div>
-                <h2>Students</h2>
-                <p>Add students to teams and assign roles (Creator or Viewer) to control study record permissions.</p>
-                <div class="card-footer">Manage Students →</div>
-            </a>
-            
-            <a href="/StudyRecord/Index" class="card">
-                <div class="card-icon">📖</div>
-                <h2>Study Records</h2>
-                <p>View and create study session records. Track subjects, topics, hours spent, and progress notes.</p>
-                <div class="card-footer">View Records →</div>
-            </a>
-        </div>
-        
-        <div style="text-align: center; color: white; margin-top: 60px; opacity: 0.8;">
-            <h3>Role-Based Access System</h3>
-            <p style="max-width: 600px; margin: 20px auto;">
-                🔐 School Admin creates teams<br>
-                👥 Team Admins manage students<br>
-                ✏️ Creator students log study records<br>
-                👁️ Viewer students can only view records
-            </p>
-        </div>
+    .record-card {
+        background-color: #4054B5;
+        border: none;
+        border-radius: 30px;
+        padding: 60px 80px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        color: white;
+        display: block;
+        min-width: 250px;
+    }
+
+    .record-card:hover {
+        transform: translateY(-5px);
+        background-color: #2f3f8f;
+        box-shadow: 0 10px 30px rgba(64, 84, 181, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .record-card h2 {
+        font-size: 28px;
+        font-weight: 600;
+        margin: 0;
+        color: white;
+    }
+</style>
+
+<!-- Main Content -->
+<div class="home-container">
+    <div class="cards-container">
+        <a href="/StudyRecord/Index" class="record-card">
+            <h2>Study Record</h2>
+        </a>
+
+        <a href="/SportsRecord/Index" class="record-card">
+            <h2>Sports Record</h2>
+        </a>
     </div>
-</body>
-</html>
+</div>
