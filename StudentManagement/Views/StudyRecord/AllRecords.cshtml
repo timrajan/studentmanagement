@@ -3,54 +3,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Study Records - @ViewBag.StudentName</title>
+    <title>All Study Records</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 40px;
             background-color: #f5f5f5;
         }
-        
+
         h1 {
             color: #333;
-            border-bottom: 3px solid #9C27B0;
+            border-bottom: 3px solid #2196F3;
             padding-bottom: 10px;
         }
-        
-        .summary-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        .success-message {
+            background-color: #4CAF50;
             color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
         }
-        
-        .summary-box h2 {
-            margin: 0 0 10px 0;
+
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
         }
-        
+
         .record-card {
             background-color: white;
             padding: 20px;
             margin: 15px 0;
-            border-left: 5px solid #9C27B0;
+            border-left: 5px solid #2196F3;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
+
         .record-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
-        
+
         .subject {
             font-size: 20px;
             font-weight: bold;
             color: #2c3e50;
         }
-        
+
         .hours-badge {
             background-color: #4CAF50;
             color: white;
@@ -58,49 +62,91 @@
             border-radius: 20px;
             font-weight: bold;
         }
-        
+
         .topic {
             color: #666;
             font-size: 16px;
             margin: 10px 0;
         }
-        
+
         .notes {
-            background-color: #f3e5f5;
+            background-color: #fffbea;
             padding: 15px;
-            border-left: 3px solid #9C27B0;
+            border-left: 3px solid #ffc107;
             margin: 10px 0;
             font-style: italic;
         }
-        
+
         .meta-info {
             color: #999;
             font-size: 14px;
             margin-top: 10px;
         }
+
+        .nav-links {
+            margin: 20px 0;
+        }
+
+        .nav-links a {
+            color: #2196F3;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .create-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .create-btn:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
-    <h1>📖 Study Records for @ViewBag.StudentName</h1>
-    
-    <p><a href="/StudyRecord/Index">← Back to All Records</a></p>
-    
+    <h1>All Study Records</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="success-message">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="error-message">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="nav-links">
+        <a href="/StudyRecord/Index">← Back to Study Record</a>
+    </div>
+
+    <div class="header-section">
+        <p><strong>Total Records: @Model.Count</strong></p>
+        <a href="/StudyRecord/Create" class="create-btn">+ Log New Study Session</a>
+    </div>
+
     @if (Model.Count == 0)
     {
-        <div class="summary-box">
-            <h2>No study records yet!</h2>
-            <p>This student hasn't logged any study sessions yet.</p>
-        </div>
+        <p>No study records yet. Time to start studying!</p>
     }
     else
     {
-
-        <div class="summary-box">
-            <h2>Study Summary</h2>
-            <p>📊 Total Records: <strong>@Model.Count</strong></p>
-        </div>
-
-        @foreach (var record in Model.OrderByDescending(r => r.CreatedDate))
+        @foreach (var record in Model)
         {
             <div class="record-card">
                 <div class="record-header">

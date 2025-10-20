@@ -116,53 +116,7 @@ namespace StudentManagement.Services
         };
 
         // Our "database" of study records
-        public List<StudyRecord> StudyRecords { get; set; } = new List<StudyRecord>
-        {
-            new StudyRecord
-            {
-                Id = 1,
-                StudentId = 1,
-                Subject = "Mathematics",
-                Topic = "Linear Algebra",
-                HoursSpent = 2.5,
-                Notes = "Worked on matrix multiplication problems. Need more practice.",
-                StudyDate = DateTime.Now.AddDays(-2),
-                CreatedDate = DateTime.Now.AddDays(-2)
-            },
-            new StudyRecord
-            {
-                Id = 2,
-                StudentId = 1,
-                Subject = "Computer Science",
-                Topic = "ASP.NET Core MVC",
-                HoursSpent = 3.0,
-                Notes = "Built my first MVC application! Understanding Models, Views, and Controllers.",
-                StudyDate = DateTime.Now.AddDays(-1),
-                CreatedDate = DateTime.Now.AddDays(-1)
-            },
-            new StudyRecord
-            {
-                Id = 3,
-                StudentId = 2,
-                Subject = "Physics",
-                Topic = "Quantum Mechanics",
-                HoursSpent = 1.5,
-                Notes = "Introduction to wave-particle duality. Fascinating stuff!",
-                StudyDate = DateTime.Now.AddDays(-1),
-                CreatedDate = DateTime.Now.AddDays(-1)
-            },
-            new StudyRecord
-            {
-                Id = 4,
-                StudentId = 3,
-                Subject = "Computer Science",
-                Topic = "Data Structures",
-                HoursSpent = 2.0,
-                Notes = "Studied binary trees and traversal algorithms.",
-                StudyDate = DateTime.Now,
-                CreatedDate = DateTime.Now
-            }
-        };
+        public List<StudyRecord> StudyRecords { get; set; } = new List<StudyRecord>();
 
         // Our "database" of sports records
         public List<SportsRecord> SportsRecords { get; set; } = new List<SportsRecord>

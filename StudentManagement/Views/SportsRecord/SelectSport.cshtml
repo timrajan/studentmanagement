@@ -1,0 +1,130 @@
+@{
+    ViewData["Title"] = "Select Sport";
+}
+
+<style>
+    .select-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+        padding: 40px;
+    }
+
+    .form-box {
+        background-color: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .form-title {
+        color: #333;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        color: #555;
+        font-weight: 500;
+        font-size: 16px;
+    }
+
+    .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+
+    .form-group select:focus {
+        outline: none;
+        border-color: #FF5722;
+    }
+
+    .submit-btn {
+        background-color: #FF5722;
+        color: white;
+        padding: 14px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 500;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s;
+    }
+
+    .submit-btn:hover {
+        background-color: #E64A19;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+    }
+
+    .back-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .back-link a {
+        color: #FF5722;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    .back-link a:hover {
+        text-decoration: underline;
+    }
+
+    .no-records {
+        text-align: center;
+        color: #666;
+        padding: 20px;
+    }
+</style>
+
+<div class="select-container">
+    <div class="form-box">
+        <h2 class="form-title">View Sports Records by Sport Type</h2>
+
+        @if (ViewBag.Sports != null && ViewBag.Sports.Count > 0)
+        {
+            <form action="/SportsRecord/BySport" method="get">
+                <div class="form-group">
+                    <label for="sport">Select Sport:</label>
+                    <select name="sport" id="sport" required>
+                        <option value="">-- Choose a Sport --</option>
+                        @foreach (var sport in ViewBag.Sports)
+                        {
+                            <option value="@sport">@sport</option>
+                        }
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">View Records</button>
+            </form>
+        }
+        else
+        {
+            <div class="no-records">
+                <p>No sports records available yet. Create some sports records first!</p>
+            </div>
+        }
+
+        <div class="back-link">
+            <a href="/SportsRecord/Index">← Back to Sports Record</a>
+        </div>
+    </div>
+</div>

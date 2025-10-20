@@ -13,10 +13,50 @@ namespace StudentManagement.Controllers
             _dataService = dataService;
         }
 
-        // Show all sports records
+        // Show the main sports record page with buttons
         public IActionResult Index()
         {
+            return View();
+        }
+
+        // Show all sports records
+        public IActionResult AllRecords()
+        {
             return View(_dataService.SportsRecords);
+        }
+
+        // GET: Show form to select a student
+        [HttpGet]
+        public IActionResult SelectStudent()
+        {
+            ViewBag.Students = _dataService.Students;
+            return View();
+        }
+
+        // GET: Show form to select a sport type
+        [HttpGet]
+        public IActionResult SelectSport()
+        {
+            // Get unique sport names from sports records
+            var sports = _dataService.SportsRecords
+                .Select(r => r.SportName)
+                .Distinct()
+                .OrderBy(s => s)
+                .ToList();
+
+            ViewBag.Sports = sports;
+            return View();
+        }
+
+        // Show sports records by sport name
+        public IActionResult BySport(string sport)
+        {
+            var records = _dataService.SportsRecords
+                .Where(r => r.SportName.Equals(sport, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            ViewBag.Sport = sport;
+            return View(records);
         }
 
         // Show sports records for a specific student

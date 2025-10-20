@@ -13,6 +13,6 @@ namespace StudentManagement.Models
         // Student's phone number (optional)
         public string PhoneNumber { get; set; } = string.Empty;
 
-        public string Role { get; set; } = "Viewer";  
+        public string Role { get; set; } = "Viewer";
     }
 }

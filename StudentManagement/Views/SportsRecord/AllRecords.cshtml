@@ -1,0 +1,177 @@
+@model List<StudentManagement.Models.SportsRecord>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Sports Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #FF5722;
+            padding-bottom: 10px;
+        }
+
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .record-card {
+            background-color: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 5px solid #FF5722;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .sport-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .hours-badge {
+            background-color: #FF5722;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .activity-type {
+            color: #666;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .notes {
+            background-color: #fff3e0;
+            padding: 15px;
+            border-left: 3px solid #FF9800;
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        .meta-info {
+            color: #999;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .nav-links {
+            margin: 20px 0;
+        }
+
+        .nav-links a {
+            color: #FF5722;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .create-btn {
+            background-color: #FF5722;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .create-btn:hover {
+            background-color: #E64A19;
+        }
+    </style>
+</head>
+<body>
+    <h1>All Sports Records</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="success-message">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="error-message">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="nav-links">
+        <a href="/SportsRecord/Index">← Back to Sports Record</a>
+    </div>
+
+    <div class="header-section">
+        <p><strong>Total Records: @Model.Count</strong></p>
+        <a href="/SportsRecord/Create" class="create-btn">+ Log New Sports Activity</a>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <p>No sports records yet. Time to get active!</p>
+    }
+    else
+    {
+        @foreach (var record in Model)
+        {
+            <div class="record-card">
+                <div class="record-header">
+                    <div class="sport-name">@record.SportName</div>
+                    <div class="hours-badge">@record.HoursSpent hours</div>
+                </div>
+
+                <div class="activity-type">
+                    <strong>Activity Type:</strong> @record.ActivityType
+                </div>
+
+                @if (!string.IsNullOrEmpty(record.Notes))
+                {
+                    <div class="notes">
+                        <strong>Notes:</strong> @record.Notes
+                    </div>
+                }
+
+                <div class="meta-info">
+                    Student ID: @record.StudentId |
+                    Activity on: @record.ActivityDate.ToString("MMMM dd, yyyy") |
+                    Recorded: @record.CreatedDate.ToString("MMMM dd, yyyy")
+                </div>
+            </div>
+        }
+    }
+</body>
+</html>

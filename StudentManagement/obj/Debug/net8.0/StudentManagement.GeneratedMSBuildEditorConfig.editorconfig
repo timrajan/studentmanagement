@@ -34,6 +34,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/SportsRecord/AllRecords.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BvcnRzUmVjb3JkXEFsbFJlY29yZHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/SportsRecord/BySport.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BvcnRzUmVjb3JkXEJ5U3BvcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Documents/studentmanagement/StudentManagement/Views/SportsRecord/ByStudent.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BvcnRzUmVjb3JkXEJ5U3R1ZGVudC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -44,6 +52,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/User/Documents/studentmanagement/StudentManagement/Views/SportsRecord/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BvcnRzUmVjb3JkXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/SportsRecord/SelectSport.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BvcnRzUmVjb3JkXFNlbGVjdFNwb3J0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/SportsRecord/SelectStudent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BvcnRzUmVjb3JkXFNlbGVjdFN0dWRlbnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Student/ByTeam.cshtml]
@@ -58,8 +74,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/StudyRecord/AllRecords.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZHlSZWNvcmRcQWxsUmVjb3Jkcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Documents/studentmanagement/StudentManagement/Views/StudyRecord/ByStudent.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZHlSZWNvcmRcQnlTdHVkZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/StudyRecord/BySubject.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZHlSZWNvcmRcQnlTdWJqZWN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Documents/studentmanagement/StudentManagement/Views/StudyRecord/Create.cshtml]
@@ -68,6 +92,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/User/Documents/studentmanagement/StudentManagement/Views/StudyRecord/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZHlSZWNvcmRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/StudyRecord/SelectStudent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZHlSZWNvcmRcU2VsZWN0U3R1ZGVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/studentmanagement/StudentManagement/Views/StudyRecord/SelectSubject.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZHlSZWNvcmRcU2VsZWN0U3ViamVjdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Documents/studentmanagement/StudentManagement/Views/Team/AddAdmin.cshtml]

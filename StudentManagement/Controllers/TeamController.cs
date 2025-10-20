@@ -305,11 +305,12 @@ namespace StudentManagement.Controllers
             }
 
             // Remove all study records for this student
-            var studyRecordsToRemove = _dataService.StudyRecords.Where(sr => sr.StudentId == student.Id).ToList();
-            foreach (var record in studyRecordsToRemove)
-            {
-                _dataService.StudyRecords.Remove(record);
-            }
+            // Note: StudyRecord model changed, no longer linked by StudentId
+            // var studyRecordsToRemove = _dataService.StudyRecords.Where(sr => sr.FirstName == student.Name).ToList();
+            // foreach (var record in studyRecordsToRemove)
+            // {
+            //     _dataService.StudyRecords.Remove(record);
+            // }
 
             // Remove all sports records for this student
             var sportsRecordsToRemove = _dataService.SportsRecords.Where(sr => sr.StudentId == student.Id).ToList();
