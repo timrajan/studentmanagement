@@ -1,89 +1,80 @@
 @model StudentManagement.Models.StudyRecord
+@{
+    ViewData["Title"] = "Create Student Record";
+}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Student Record</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 40px;
-            background-color: #f5f5f5;
-        }
+<style>
+    h1 {
+        text-align: center;
+        color: #333;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 50px;
+        letter-spacing: 1px;
+    }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 50px;
-            letter-spacing: 1px;
-        }
+    .form-container {
+        background-color: white;
+        padding: 50px;
+        margin: 0 auto;
+        max-width: 900px;
+    }
 
-        .form-container {
-            background-color: white;
-            padding: 50px;
-            margin: 0 auto;
-            max-width: 900px;
-        }
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px 60px;
+        margin-bottom: 40px;
+    }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px 60px;
-            margin-bottom: 40px;
-        }
+    .form-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
 
-        .form-row {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+    .form-row label {
+        min-width: 150px;
+        text-align: right;
+        font-size: 14px;
+        color: #333;
+    }
 
-        .form-row label {
-            min-width: 150px;
-            text-align: right;
-            font-size: 14px;
-            color: #333;
-        }
+    .form-row input,
+    .form-row select {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #333;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+    }
 
-        .form-row input,
-        .form-row select {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #333;
-            border-radius: 4px;
-            font-size: 14px;
-            font-family: Arial, sans-serif;
-        }
+    .submit-container {
+        text-align: center;
+        margin-top: 40px;
+    }
 
-        .submit-container {
-            text-align: center;
-            margin-top: 40px;
-        }
+    .submit-btn {
+        background-color: white;
+        color: #000;
+        padding: 12px 40px;
+        border: 2px solid #000;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        letter-spacing: 1px;
+    }
 
-        .submit-btn {
-            background-color: white;
-            color: #000;
-            padding: 12px 40px;
-            border: 2px solid #000;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            letter-spacing: 1px;
-        }
+    .submit-btn:hover {
+        background-color: #f0f0f0;
+    }
+</style>
 
-        .submit-btn:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
-</head>
-<body>
-    <h1>CREATE STUDENT RECORD</h1>
+<h1>CREATE STUDENT RECORD</h1>
 
-    <div class="form-container">
+<div class="form-container">
         <form method="post" action="/StudyRecord/Create">
             <div class="form-grid">
                 <!-- Left column -->
@@ -196,5 +187,3 @@
             </div>
         </form>
     </div>
-</body>
-</html>

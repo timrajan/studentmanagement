@@ -89,5 +89,22 @@ namespace StudentManagement.Controllers
             TempData["SuccessMessage"] = "Study record created successfully!";
             return RedirectToAction("Index");
         }
+
+        // GET: Show the View Students page
+        [HttpGet]
+        public IActionResult ViewStudents()
+        {
+            return View();
+        }
+
+        // POST: Handle the View button click (for future DB implementation)
+        [HttpPost]
+        public IActionResult ViewStudents(string filterType, string filterValue)
+        {
+            // This will be implemented when DB is ready
+            // For now, just return to the same view
+            ViewBag.Message = $"Searching for students by {filterType}: {filterValue}";
+            return View();
+        }
     }
 }
