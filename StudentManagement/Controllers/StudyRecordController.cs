@@ -67,6 +67,32 @@ namespace StudentManagement.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            // Get current user's Windows username
+            var username = ViewBag.Username?.ToString() ?? Environment.UserName;
+
+            // Find the TeamAdmin record for this user
+            var teamAdmin = _dataService.TeamAdmins.FirstOrDefault(ta =>
+                ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+            if (teamAdmin != null)
+            {
+                // Map TeamId to team name (teamA, teamB, teamC)
+                var teamName = teamAdmin.TeamId switch
+                {
+                    1 => "teamA",
+                    2 => "teamB",
+                    3 => "teamC",
+                    _ => "teamA"
+                };
+
+                ViewBag.UserTeam = teamName;
+            }
+            else
+            {
+                // Default to teamA if user not found
+                ViewBag.UserTeam = "teamA";
+            }
+
             return View();
         }
 
@@ -94,6 +120,32 @@ namespace StudentManagement.Controllers
         [HttpGet]
         public IActionResult ViewStudents()
         {
+            // Get current user's Windows username
+            var username = ViewBag.Username?.ToString() ?? Environment.UserName;
+
+            // Find the TeamAdmin record for this user
+            var teamAdmin = _dataService.TeamAdmins.FirstOrDefault(ta =>
+                ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+            if (teamAdmin != null)
+            {
+                // Map TeamId to team name (teamA, teamB, teamC)
+                var teamName = teamAdmin.TeamId switch
+                {
+                    1 => "teamA",
+                    2 => "teamB",
+                    3 => "teamC",
+                    _ => "teamA"
+                };
+
+                ViewBag.UserTeam = teamName;
+            }
+            else
+            {
+                // Default to teamA if user not found
+                ViewBag.UserTeam = "teamA";
+            }
+
             return View();
         }
 
@@ -101,6 +153,27 @@ namespace StudentManagement.Controllers
         [HttpPost]
         public IActionResult ViewStudents(string filterType, string filterValue)
         {
+            // Get current user's team info (same as GET action)
+            var username = ViewBag.Username?.ToString() ?? Environment.UserName;
+            var teamAdmin = _dataService.TeamAdmins.FirstOrDefault(ta =>
+                ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+            if (teamAdmin != null)
+            {
+                var teamName = teamAdmin.TeamId switch
+                {
+                    1 => "teamA",
+                    2 => "teamB",
+                    3 => "teamC",
+                    _ => "teamA"
+                };
+                ViewBag.UserTeam = teamName;
+            }
+            else
+            {
+                ViewBag.UserTeam = "teamA";
+            }
+
             // This will be implemented when DB is ready
             // For now, just return to the same view
             ViewBag.Message = $"Searching for students by {filterType}: {filterValue}";

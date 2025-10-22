@@ -81,7 +81,8 @@
                 <div class="form-row">
                     <label for="Team">Team</label>
                     <select id="Team" name="Team">
-                        <option value=""></option>
+                        <option value="">-- Select --</option>
+                        <option value="@ViewBag.UserTeam" selected>@ViewBag.UserTeam</option>
                     </select>
                 </div>
 
@@ -89,7 +90,10 @@
                 <div class="form-row">
                     <label for="Environment">Environment</label>
                     <select id="Environment" name="Environment">
-                        <option value=""></option>
+                        <option value="">-- Select --</option>
+                        <option value="Dev">Dev</option>
+                        <option value="Test">Test</option>
+                        <option value="Prod">Prod</option>
                     </select>
                 </div>
 

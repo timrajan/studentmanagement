@@ -88,7 +88,6 @@
             <div class="form-row" id="dynamicFieldRow">
                 <label id="dynamicLabel"></label>
                 <select id="dynamicDropdown" name="filterValue" style="display: none;">
-                    <option value="">-- Select --</option>
                 </select>
                 <input type="text" id="dynamicTextbox" name="filterValue" style="display: none;" />
             </div>
@@ -99,40 +98,53 @@
         </form>
     </div>
 
-@section Scripts {
-    <script>
-        function handleFilterChange() {
-            const filterType = document.getElementById('filterType').value;
-            const dynamicFieldRow = document.getElementById('dynamicFieldRow');
-            const dynamicLabel = document.getElementById('dynamicLabel');
-            const dynamicDropdown = document.getElementById('dynamicDropdown');
-            const dynamicTextbox = document.getElementById('dynamicTextbox');
+<script>
+    // Get user's team from server
+    var userTeam = '@ViewBag.UserTeam';
 
-            // Hide everything first
-            dynamicFieldRow.style.display = 'none';
-            dynamicDropdown.style.display = 'none';
-            dynamicTextbox.style.display = 'none';
+    function handleFilterChange() {
+        const filterType = document.getElementById('filterType').value;
+        const dynamicFieldRow = document.getElementById('dynamicFieldRow');
+        const dynamicLabel = document.getElementById('dynamicLabel');
+        const dynamicDropdown = document.getElementById('dynamicDropdown');
+        const dynamicTextbox = document.getElementById('dynamicTextbox');
 
-            if (filterType === '') {
-                return;
-            }
+        // Hide everything first
+        dynamicFieldRow.style.display = 'none';
+        dynamicDropdown.style.display = 'none';
+        dynamicTextbox.style.display = 'none';
 
-            // Show the row
-            dynamicFieldRow.style.display = 'flex';
-
-            if (filterType === 'Team' || filterType === 'Environment') {
-                // Show dropdown
-                dynamicLabel.textContent = filterType;
-                dynamicDropdown.style.display = 'block';
-                dynamicTextbox.removeAttribute('name');
-                dynamicDropdown.setAttribute('name', 'filterValue');
-            } else if (filterType === 'RollNumber' || filterType === 'EmailAddress') {
-                // Show textbox
-                dynamicLabel.textContent = filterType === 'RollNumber' ? 'Roll Number' : 'Email Address';
-                dynamicTextbox.style.display = 'block';
-                dynamicDropdown.removeAttribute('name');
-                dynamicTextbox.setAttribute('name', 'filterValue');
-            }
+        if (filterType === '') {
+            return;
         }
-    </script>
-}
+
+        // Show the row
+        dynamicFieldRow.style.display = 'flex';
+
+        if (filterType === 'Team') {
+            // Show dropdown with only user's team
+            dynamicLabel.textContent = 'Team';
+            dynamicDropdown.innerHTML = '<option value="">-- Select --</option>' +
+                                       '<option value="' + userTeam + '">' + userTeam + '</option>';
+            dynamicDropdown.style.display = 'block';
+            dynamicTextbox.removeAttribute('name');
+            dynamicDropdown.setAttribute('name', 'filterValue');
+        } else if (filterType === 'Environment') {
+            // Show dropdown with environment options
+            dynamicLabel.textContent = 'Environment';
+            dynamicDropdown.innerHTML = '<option value="">-- Select --</option>' +
+                                       '<option value="Dev">Dev</option>' +
+                                       '<option value="Test">Test</option>' +
+                                       '<option value="Prod">Prod</option>';
+            dynamicDropdown.style.display = 'block';
+            dynamicTextbox.removeAttribute('name');
+            dynamicDropdown.setAttribute('name', 'filterValue');
+        } else if (filterType === 'RollNumber' || filterType === 'EmailAddress') {
+            // Show textbox
+            dynamicLabel.textContent = filterType === 'RollNumber' ? 'Roll Number' : 'Email Address';
+            dynamicTextbox.style.display = 'block';
+            dynamicDropdown.removeAttribute('name');
+            dynamicTextbox.setAttribute('name', 'filterValue');
+        }
+    }
+</script>
