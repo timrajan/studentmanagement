@@ -7,10 +7,12 @@ namespace StudentManagement.Controllers
     public class StudyRecordController : BaseController
     {
         private readonly DataService _dataService;
+        private readonly AzureDevOpsService _azureDevOpsService;
 
-        public StudyRecordController(DataService dataService)
+        public StudyRecordController(DataService dataService, AzureDevOpsService azureDevOpsService)
         {
             _dataService = dataService;
+            _azureDevOpsService = azureDevOpsService;
         }
 
         // Show the main study record page with buttons
@@ -108,60 +110,22 @@ namespace StudentManagement.Controllers
             // Set the created date
             record.CreatedDate = DateTime.Now;
 
-            // Invoke external endpoint with captured values
-            try
+            // Trigger Azure DevOps Build Pipeline with captured values
+            var (success, message) = _azureDevOpsService.TriggerBuildPipeline(record);
+
+            if (success)
             {
-                using (var httpClient = new HttpClient())
-                {
-                    // TODO: Replace with your actual endpoint URL
-                    var endpointUrl = "https://your-api-endpoint.com/api/students";
-
-                    // Create the payload with all captured form values
-                    var payload = new
-                    {
-                        team = record.Team,
-                        firstName = record.FirstName,
-                        middleName = record.MiddleName,
-                        lastName = record.LastName,
-                        dateOfBirth = record.DateOfBirth,
-                        emailAddress = record.EmailAddress,
-                        studentIdentityID = record.StudentIdentityID,
-                        studentInitialID = record.StudentInitialID,
-                        environment = record.Environment,
-                        studentIQLevel = record.StudentIQLevel,
-                        studentRollNumber = record.StudentRollNumber,
-                        studentRollName = record.StudentRollName,
-                        studentParentEmailAddress = record.StudentParentEmailAddress,
-                        status = record.Status,
-                        type = record.Type,
-                        tags = record.Tags
-                    };
-
-                    // Serialize to JSON
-                    var json = System.Text.Json.JsonSerializer.Serialize(payload);
-                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-                    // Send POST request to endpoint
-                    var response = httpClient.PostAsync(endpointUrl, content).Result;
-
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        // Handle error - endpoint returned non-success status
-                        TempData["ErrorMessage"] = $"Failed to send data to endpoint. Status: {response.StatusCode}";
-                    }
-                }
+                TempData["SuccessMessage"] = message;
             }
-            catch (Exception ex)
+            else
             {
-                // Handle exception - network error, timeout, etc.
-                TempData["ErrorMessage"] = $"Error calling endpoint: {ex.Message}";
+                TempData["ErrorMessage"] = message;
             }
 
             // Add to our list
             _dataService.StudyRecords.Add(record);
 
             // Redirect to the index page
-            TempData["SuccessMessage"] = "Study record created successfully!";
             return RedirectToAction("Index");
         }
 

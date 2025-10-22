@@ -16,6 +16,12 @@ builder.Services.AddSession(options =>
 // Register DataService as a singleton (shared across all requests)
 builder.Services.AddSingleton<DataService>();
 
+// Register AzureDevOpsService as a singleton
+builder.Services.AddSingleton<AzureDevOpsService>();
+
+// Register SqlServerService as a singleton (or use Scoped/Transient as needed)
+builder.Services.AddSingleton<SqlServerService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
