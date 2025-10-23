@@ -91,9 +91,9 @@
                     <label for="Environment">Environment</label>
                     <select id="Environment" name="Environment">
                         <option value="">-- Select --</option>
-                        <option value="Dev">Dev</option>
-                        <option value="Test">Test</option>
-                        <option value="Prod">Prod</option>
+                        <option value="Dev" selected="@(Model?.Environment == "Dev" ? "selected" : null)">Dev</option>
+                        <option value="Test" selected="@(Model?.Environment == "Test" ? "selected" : null)">Test</option>
+                        <option value="Prod" selected="@(Model?.Environment == "Prod" ? "selected" : null)">Prod</option>
                     </select>
                 </div>
 
@@ -162,9 +162,9 @@
                     <label for="StudentIdentityID">StudentIdentityID</label>
                     <select id="StudentIdentityID" name="StudentIdentityID">
                         <option value="">-- Select --</option>
-                        <option value="ID1">ID1</option>
-                        <option value="ID2">ID2</option>
-                        <option value="ID3">ID3</option>
+                        <option value="ID1" selected="@(Model?.StudentIdentityID == "ID1" ? "selected" : null)">ID1</option>
+                        <option value="ID2" selected="@(Model?.StudentIdentityID == "ID2" ? "selected" : null)">ID2</option>
+                        <option value="ID3" selected="@(Model?.StudentIdentityID == "ID3" ? "selected" : null)">ID3</option>
                     </select>
                 </div>
 
