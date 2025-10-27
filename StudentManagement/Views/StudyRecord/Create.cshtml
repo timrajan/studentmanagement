@@ -40,6 +40,11 @@
         color: #333;
     }
 
+    .required {
+        color: red;
+        margin-left: 2px;
+    }
+
     .form-row input,
     .form-row select {
         flex: 1;
@@ -79,7 +84,7 @@
             <div class="form-grid">
                 <!-- Left column -->
                 <div class="form-row">
-                    <label for="Team">Team</label>
+                    <label for="Team">Team<span class="required">*</span></label>
                     <select id="Team" name="Team">
                         <option value="">-- Select --</option>
                         <option value="@ViewBag.UserTeam" selected>@ViewBag.UserTeam</option>
@@ -88,7 +93,7 @@
 
                 <!-- Right column -->
                 <div class="form-row">
-                    <label for="Environment">Environment</label>
+                    <label for="Environment">Environment<span class="required">*</span></label>
                     <select id="Environment" name="Environment">
                         <option value="">-- Select --</option>
                         <option value="Dev" selected="@(Model?.Environment == "Dev" ? "selected" : null)">Dev</option>
@@ -99,67 +104,67 @@
 
                 <!-- Left column -->
                 <div class="form-row">
-                    <label for="FirstName">FirstName</label>
+                    <label for="FirstName">FirstName<span class="required">*</span></label>
                     <input type="text" id="FirstName" name="FirstName" value="@Model?.FirstName" />
                 </div>
 
                 <!-- Right column -->
                 <div class="form-row">
-                    <label for="StudentIQLevel">Student IQ Level</label>
+                    <label for="StudentIQLevel">Student IQ Level<span class="required">*</span></label>
                     <input type="text" id="StudentIQLevel" name="StudentIQLevel" value="@Model?.StudentIQLevel" />
                 </div>
 
                 <!-- Left column -->
                 <div class="form-row">
-                    <label for="MiddleName">MiddleName</label>
+                    <label for="MiddleName">MiddleName<span class="required">*</span></label>
                     <input type="text" id="MiddleName" name="MiddleName" value="@Model?.MiddleName" />
                 </div>
 
                 <!-- Right column -->
                 <div class="form-row">
-                    <label for="StudentRollNumber">Student RollNumber</label>
+                    <label for="StudentRollNumber">Student RollNumber<span class="required">*</span></label>
                     <input type="text" id="StudentRollNumber" name="StudentRollNumber" value="@Model?.StudentRollNumber" />
                 </div>
 
                 <!-- Left column -->
                 <div class="form-row">
-                    <label for="LastName">LastName</label>
+                    <label for="LastName">LastName<span class="required">*</span></label>
                     <input type="text" id="LastName" name="LastName" value="@Model?.LastName" />
                 </div>
 
                 <!-- Right column -->
                 <div class="form-row">
-                    <label for="StudentRollName">Student RollName</label>
+                    <label for="StudentRollName">Student RollName<span class="required">*</span></label>
                     <input type="text" id="StudentRollName" name="StudentRollName" value="@Model?.StudentRollName" />
                 </div>
 
                 <!-- Left column -->
                 <div class="form-row">
-                    <label for="DateOfBirth">Date Of Birth</label>
+                    <label for="DateOfBirth">Date Of Birth<span class="required">*</span></label>
                     <input type="text" id="DateOfBirth" name="DateOfBirth" value="@Model?.DateOfBirth" />
                 </div>
 
                 <!-- Right column -->
                 <div class="form-row">
-                    <label for="StudentParentEmailAddress">Student Parent Email Address</label>
+                    <label for="StudentParentEmailAddress">Student Parent Email Address<span class="required">*</span></label>
                     <input type="text" id="StudentParentEmailAddress" name="StudentParentEmailAddress" value="@Model?.StudentParentEmailAddress" />
                 </div>
 
                 <!-- Left column -->
                 <div class="form-row">
-                    <label for="EmailAddress">Email Address</label>
+                    <label for="EmailAddress">Email Address<span class="required">*</span></label>
                     <input type="text" id="EmailAddress" name="EmailAddress" value="@Model?.EmailAddress" />
                 </div>
 
                 <!-- Right column -->
                 <div class="form-row">
-                    <label for="Status">Status</label>
+                    <label for="Status">Status<span class="required">*</span></label>
                     <input type="text" id="Status" name="Status" value="@Model?.Status" />
                 </div>
 
                 <!-- Left column -->
                 <div class="form-row">
-                    <label for="StudentIdentityID">StudentIdentityID</label>
+                    <label for="StudentIdentityID">StudentIdentityID<span class="required">*</span></label>
                     <select id="StudentIdentityID" name="StudentIdentityID">
                         <option value="">-- Select --</option>
                         <option value="ID1" selected="@(Model?.StudentIdentityID == "ID1" ? "selected" : null)">ID1</option>
@@ -170,19 +175,19 @@
 
                 <!-- Right column -->
                 <div class="form-row">
-                    <label for="Type">Type</label>
+                    <label for="Type">Type<span class="required">*</span></label>
                     <input type="text" id="Type" name="Type" value="@Model?.Type" />
                 </div>
 
                 <!-- Left column -->
                 <div class="form-row">
-                    <label for="StudentInitialID">StudentInitialID</label>
+                    <label for="StudentInitialID">StudentInitialID<span class="required">*</span></label>
                     <input type="text" id="StudentInitialID" name="StudentInitialID" value="@Model?.StudentInitialID" />
                 </div>
 
                 <!-- Right column -->
                 <div class="form-row">
-                    <label for="Tags">Tags</label>
+                    <label for="Tags">Tags<span class="required">*</span></label>
                     <input type="text" id="Tags" name="Tags" value="@Model?.Tags" />
                 </div>
             </div>
