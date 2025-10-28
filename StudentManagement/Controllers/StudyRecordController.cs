@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using StudentManagement.Data;
 using StudentManagement.Models;
 using StudentManagement.Services;
 
@@ -6,12 +7,12 @@ namespace StudentManagement.Controllers
 {
     public class StudyRecordController : BaseController
     {
-        private readonly DataService _dataService;
+        private readonly ApplicationDbContext _context;
         private readonly AzureDevOpsService _azureDevOpsService;
 
-        public StudyRecordController(DataService dataService, AzureDevOpsService azureDevOpsService)
+        public StudyRecordController(ApplicationDbContext context, AzureDevOpsService azureDevOpsService)
         {
-            _dataService = dataService;
+            _context = context;
             _azureDevOpsService = azureDevOpsService;
         }
 
@@ -24,14 +25,16 @@ namespace StudentManagement.Controllers
         // Show all study records
         public IActionResult AllRecords()
         {
-            return View(_dataService.StudyRecords);
+            var records = _context.StudyRecords.ToList();
+            return View(records);
         }
 
         // GET: Show form to select a student
         [HttpGet]
         public IActionResult SelectStudent()
         {
-            ViewBag.Students = _dataService.Students;
+            var students = _context.Students.ToList();
+            ViewBag.Students = students;
             return View();
         }
 
@@ -56,8 +59,9 @@ namespace StudentManagement.Controllers
         // Show study records for a specific student
         public IActionResult ByStudent(string firstName)
         {
-            var studentRecords = _dataService.StudyRecords
-                .Where(r => r.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase))
+            var studentRecords = _context.StudyRecords
+                .ToList()
+                .Where(r => r.FirstName != null && r.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             ViewBag.StudentName = firstName;
@@ -70,15 +74,16 @@ namespace StudentManagement.Controllers
         public IActionResult Create()
         {
             // Get current user's Windows username
-            var username = ViewBag.Username?.ToString() ?? Environment.UserName;
+            string username = ViewBag.Username?.ToString() ?? Environment.UserName;
 
-            // Find the TeamAdmin record for this user
-            var teamAdmin = _dataService.TeamAdmins.FirstOrDefault(ta =>
-                ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            // Find the TeamAdmin record for this user - Load to memory first, then filter
+            var teamAdmin = _context.TeamAdmins
+                .ToList()
+                .FirstOrDefault(ta => ta.Username != null && ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
 
             if (teamAdmin != null)
             {
-                // Map TeamId to team name (teamA, teamB, teamC)
+                // Map TeamId to team name (teamA
                 var teamName = teamAdmin.TeamId switch
                 {
                     1 => "teamA",
@@ -102,11 +107,6 @@ namespace StudentManagement.Controllers
         [HttpPost]
         public IActionResult Create(StudyRecord record)
         {
-            // Generate a new ID
-            record.Id = _dataService.StudyRecords.Count > 0
-                ? _dataService.StudyRecords.Max(r => r.Id) + 1
-                : 1;
-
             // Set the created date
             record.CreatedDate = DateTime.Now;
 
@@ -122,8 +122,9 @@ namespace StudentManagement.Controllers
                 TempData["ErrorMessage"] = message;
             }
 
-            // Add to our list
-            _dataService.StudyRecords.Add(record);
+            // Add to database
+            _context.StudyRecords.Add(record);
+            _context.SaveChanges();
 
             // Redirect to the index page
             return RedirectToAction("Index");
@@ -134,11 +135,12 @@ namespace StudentManagement.Controllers
         public IActionResult ViewStudents()
         {
             // Get current user's Windows username
-            var username = ViewBag.Username?.ToString() ?? Environment.UserName;
+            string username = ViewBag.Username?.ToString() ?? Environment.UserName;
 
-            // Find the TeamAdmin record for this user
-            var teamAdmin = _dataService.TeamAdmins.FirstOrDefault(ta =>
-                ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            // Find the TeamAdmin record for this user - Load to memory first, then filter
+            var teamAdmin = _context.TeamAdmins
+                .ToList()
+                .FirstOrDefault(ta => ta.Username != null && ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
 
             if (teamAdmin != null)
             {
@@ -167,9 +169,12 @@ namespace StudentManagement.Controllers
         public IActionResult ViewStudents(string filterType, string filterValue)
         {
             // Get current user's team info (same as GET action)
-            var username = ViewBag.Username?.ToString() ?? Environment.UserName;
-            var teamAdmin = _dataService.TeamAdmins.FirstOrDefault(ta =>
-                ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            string username = ViewBag.Username?.ToString() ?? Environment.UserName;
+
+            // Load to memory first, then filter
+            var teamAdmin = _context.TeamAdmins
+                .ToList()
+                .FirstOrDefault(ta => ta.Username != null && ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
 
             if (teamAdmin != null)
             {

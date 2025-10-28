@@ -1,9 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using StudentManagement.Data;
 using StudentManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add Entity Framework Core with PostgreSQL
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add session support
 builder.Services.AddSession(options =>
@@ -13,8 +19,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// Register DataService as a singleton (shared across all requests)
-builder.Services.AddSingleton<DataService>();
+// Register DataService as a singleton (shared across all requests) - COMMENTED OUT, now using Entity Framework
+// builder.Services.AddSingleton<DataService>();
 
 // Register AzureDevOpsService as a singleton
 builder.Services.AddSingleton<AzureDevOpsService>();

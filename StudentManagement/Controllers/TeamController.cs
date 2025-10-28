@@ -1,25 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
+using StudentManagement.Data;
 using StudentManagement.Models;
-using StudentManagement.Services;
 
 namespace StudentManagement.Controllers
 {
     public class TeamController : BaseController
     {
-        private readonly DataService _dataService;
+        private readonly ApplicationDbContext _context;
 
-        public TeamController(DataService dataService)
+        public TeamController(ApplicationDbContext context)
         {
-            _dataService = dataService;
+            _context = context;
         }
 
         // GET: Show all teams
         public IActionResult Index()
         {
+            // Load teams with related data
+            var teamAdmins = _context.TeamAdmins.ToList();
+            var students = _context.Students.ToList();
+
             // We need to pass BOTH teams and their admins/students to the view
-            // We'll use ViewBag for the admins and students
-            ViewBag.TeamAdmins = _dataService.TeamAdmins;
-            ViewBag.Students = _dataService.Students;
+            ViewBag.TeamAdmins = teamAdmins;
+            ViewBag.Students = students;
 
             // Get the current user's role and username
             var role = ViewBag.Role as string;
@@ -29,19 +32,23 @@ namespace StudentManagement.Controllers
             if (role == "TeamAdmin")
             {
                 // Find the team(s) that this admin manages
-                var adminRecord = _dataService.TeamAdmins
-                    .FirstOrDefault(ta => ta.Username.Equals(currentUsername, StringComparison.OrdinalIgnoreCase));
+                var adminRecord = _context.TeamAdmins
+                    .ToList()
+                    .FirstOrDefault(ta => ta.Username != null && ta.Username.Equals(currentUsername, StringComparison.OrdinalIgnoreCase));
 
                 if (adminRecord != null)
                 {
                     // Return only the teams this admin manages
-                    var adminTeams = _dataService.Teams.Where(t => t.Id == adminRecord.TeamId).ToList();
+                    var adminTeams = _context.Teams
+                        .Where(t => t.Id == adminRecord.TeamId)
+                        .ToList();
                     return View(adminTeams);
                 }
             }
 
             // For SuperAdmin or if no admin record found, show all teams
-            return View(_dataService.Teams);
+            var allTeams = _context.Teams.ToList();
+            return View(allTeams);
         }
 
         // GET: Show the form to create a new team
@@ -69,11 +76,6 @@ namespace StudentManagement.Controllers
                 return View(team);
             }
 
-            // Generate a new team ID
-            team.Id = _dataService.Teams.Count > 0
-                ? _dataService.Teams.Max(t => t.Id) + 1
-                : 1;
-
             // Set default description if not provided
             if (string.IsNullOrEmpty(team.Description))
             {
@@ -83,15 +85,13 @@ namespace StudentManagement.Controllers
             // Set the created date
             team.CreatedDate = DateTime.Now;
 
-            // Add the team
-            _dataService.Teams.Add(team);
+            // Add the team (EF will auto-generate the ID)
+            _context.Teams.Add(team);
+            _context.SaveChanges();
 
             // Create the first Team Admin
             var newAdmin = new TeamAdmin
             {
-                Id = _dataService.TeamAdmins.Count > 0
-                    ? _dataService.TeamAdmins.Max(a => a.Id) + 1
-                    : 1,
                 TeamId = team.Id,
                 Name = adminName,
                 Email = string.IsNullOrEmpty(adminEmail) ? $"{adminName.Replace(" ", "").ToLower()}@school.com" : adminEmail,
@@ -99,7 +99,8 @@ namespace StudentManagement.Controllers
                 AddedDate = DateTime.Now
             };
 
-            _dataService.TeamAdmins.Add(newAdmin);
+            _context.TeamAdmins.Add(newAdmin);
+            _context.SaveChanges();
 
             // Show success message
             TempData["SuccessMessage"] = $"Team '{team.Name}' has been created with {adminName} as Team Admin!";
@@ -112,7 +113,7 @@ namespace StudentManagement.Controllers
         [HttpGet]
         public IActionResult AddAdmin(int teamId)
         {
-            var team = _dataService.Teams.FirstOrDefault(t => t.Id == teamId);
+            var team = _context.Teams.FirstOrDefault(t => t.Id == teamId);
             if (team == null)
             {
                 return NotFound();
@@ -126,7 +127,7 @@ namespace StudentManagement.Controllers
         [HttpPost]
         public IActionResult AddAdmin(int teamId, string adminName, string adminEmail)
         {
-            var team = _dataService.Teams.FirstOrDefault(t => t.Id == teamId);
+            var team = _context.Teams.FirstOrDefault(t => t.Id == teamId);
             if (team == null)
             {
                 return NotFound();
@@ -143,9 +144,6 @@ namespace StudentManagement.Controllers
             // Create the new admin
             var newAdmin = new TeamAdmin
             {
-                Id = _dataService.TeamAdmins.Count > 0
-                    ? _dataService.TeamAdmins.Max(a => a.Id) + 1
-                    : 1,
                 TeamId = teamId,
                 Name = adminName,
                 Email = adminEmail,
@@ -153,7 +151,8 @@ namespace StudentManagement.Controllers
                 AddedDate = DateTime.Now
             };
 
-            _dataService.TeamAdmins.Add(newAdmin);
+            _context.TeamAdmins.Add(newAdmin);
+            _context.SaveChanges();
 
             TempData["SuccessMessage"] = $"{adminName} has been added as a Team Admin for '{team.Name}'!";
 
@@ -177,7 +176,9 @@ namespace StudentManagement.Controllers
                 return View();
             }
 
-            var team = _dataService.Teams.FirstOrDefault(t => t.Name.Equals(teamName, StringComparison.OrdinalIgnoreCase));
+            var team = _context.Teams
+                .ToList()
+                .FirstOrDefault(t => t.Name != null && t.Name.Equals(teamName, StringComparison.OrdinalIgnoreCase));
 
             if (team == null)
             {
@@ -186,14 +187,14 @@ namespace StudentManagement.Controllers
             }
 
             // Remove all admins associated with this team
-            var adminsToRemove = _dataService.TeamAdmins.Where(a => a.TeamId == team.Id).ToList();
-            foreach (var admin in adminsToRemove)
-            {
-                _dataService.TeamAdmins.Remove(admin);
-            }
+            var adminsToRemove = _context.TeamAdmins
+                .Where(a => a.TeamId == team.Id)
+                .ToList();
+            _context.TeamAdmins.RemoveRange(adminsToRemove);
 
             // Remove the team
-            _dataService.Teams.Remove(team);
+            _context.Teams.Remove(team);
+            _context.SaveChanges();
 
             TempData["SuccessMessage"] = $"Team '{teamName}' has been removed successfully!";
             return RedirectToAction("Index");
@@ -221,8 +222,9 @@ namespace StudentManagement.Controllers
             var currentUsername = Environment.UserName;
 
             // Find the team(s) that this admin manages
-            var adminRecord = _dataService.TeamAdmins
-                .FirstOrDefault(ta => ta.Username.Equals(currentUsername, StringComparison.OrdinalIgnoreCase));
+            var adminRecord = _context.TeamAdmins
+                .ToList()
+                .FirstOrDefault(ta => ta.Username != null && ta.Username.Equals(currentUsername, StringComparison.OrdinalIgnoreCase));
 
             if (adminRecord == null)
             {
@@ -231,7 +233,7 @@ namespace StudentManagement.Controllers
             }
 
             // Get the team
-            var team = _dataService.Teams.FirstOrDefault(t => t.Id == adminRecord.TeamId);
+            var team = _context.Teams.FirstOrDefault(t => t.Id == adminRecord.TeamId);
             if (team == null)
             {
                 ViewBag.Error = "Your assigned team could not be found.";
@@ -241,9 +243,6 @@ namespace StudentManagement.Controllers
             // Create the new student (team member) - only for the admin's team
             var newStudent = new Student
             {
-                Id = _dataService.Students.Count > 0
-                    ? _dataService.Students.Max(s => s.Id) + 1
-                    : 1,
                 Name = name,
                 Email = $"{name.Replace(" ", "").ToLower()}@school.com",
                 TeamId = team.Id,
@@ -251,7 +250,8 @@ namespace StudentManagement.Controllers
                 Role = createAccess == "Yes" ? "Creator" : "Viewer"
             };
 
-            _dataService.Students.Add(newStudent);
+            _context.Students.Add(newStudent);
+            _context.SaveChanges();
 
             TempData["SuccessMessage"] = $"{name} has been added to {team.Name} with {(createAccess == "Yes" ? "Creator" : "Viewer")} access!";
 
@@ -279,8 +279,9 @@ namespace StudentManagement.Controllers
             var currentUsername = Environment.UserName;
 
             // Find the team(s) that this admin manages
-            var adminRecord = _dataService.TeamAdmins
-                .FirstOrDefault(ta => ta.Username.Equals(currentUsername, StringComparison.OrdinalIgnoreCase));
+            var adminRecord = _context.TeamAdmins
+                .ToList()
+                .FirstOrDefault(ta => ta.Username != null && ta.Username.Equals(currentUsername, StringComparison.OrdinalIgnoreCase));
 
             if (adminRecord == null)
             {
@@ -289,7 +290,9 @@ namespace StudentManagement.Controllers
             }
 
             // Find the student
-            var student = _dataService.Students.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var student = _context.Students
+                .ToList()
+                .FirstOrDefault(s => s.Name != null && s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             if (student == null)
             {
@@ -304,23 +307,15 @@ namespace StudentManagement.Controllers
                 return View();
             }
 
-            // Remove all study records for this student
-            // Note: StudyRecord model changed, no longer linked by StudentId
-            // var studyRecordsToRemove = _dataService.StudyRecords.Where(sr => sr.FirstName == student.Name).ToList();
-            // foreach (var record in studyRecordsToRemove)
-            // {
-            //     _dataService.StudyRecords.Remove(record);
-            // }
-
             // Remove all sports records for this student
-            var sportsRecordsToRemove = _dataService.SportsRecords.Where(sr => sr.StudentId == student.Id).ToList();
-            foreach (var record in sportsRecordsToRemove)
-            {
-                _dataService.SportsRecords.Remove(record);
-            }
+            var sportsRecordsToRemove = _context.SportsRecords
+                .Where(sr => sr.StudentId == student.Id)
+                .ToList();
+            _context.SportsRecords.RemoveRange(sportsRecordsToRemove);
 
             // Remove the student
-            _dataService.Students.Remove(student);
+            _context.Students.Remove(student);
+            _context.SaveChanges();
 
             TempData["SuccessMessage"] = $"Team member '{name}' has been removed successfully!";
             return RedirectToAction("Index");

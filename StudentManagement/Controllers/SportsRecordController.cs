@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
+using StudentManagement.Data;
 using StudentManagement.Models;
-using StudentManagement.Services;
 
 namespace StudentManagement.Controllers
 {
     public class SportsRecordController : BaseController
     {
-        private readonly DataService _dataService;
+        private readonly ApplicationDbContext _context;
 
-        public SportsRecordController(DataService dataService)
+        public SportsRecordController(ApplicationDbContext context)
         {
-            _dataService = dataService;
+            _context = context;
         }
 
         // Show the main sports record page with buttons
@@ -22,14 +22,16 @@ namespace StudentManagement.Controllers
         // Show all sports records
         public IActionResult AllRecords()
         {
-            return View(_dataService.SportsRecords);
+            var records = _context.SportsRecords.ToList();
+            return View(records);
         }
 
         // GET: Show form to select a student
         [HttpGet]
         public IActionResult SelectStudent()
         {
-            ViewBag.Students = _dataService.Students;
+            var students = _context.Students.ToList();
+            ViewBag.Students = students;
             return View();
         }
 
@@ -38,7 +40,7 @@ namespace StudentManagement.Controllers
         public IActionResult SelectSport()
         {
             // Get unique sport names from sports records
-            var sports = _dataService.SportsRecords
+            var sports = _context.SportsRecords
                 .Select(r => r.SportName)
                 .Distinct()
                 .OrderBy(s => s)
@@ -51,8 +53,9 @@ namespace StudentManagement.Controllers
         // Show sports records by sport name
         public IActionResult BySport(string sport)
         {
-            var records = _dataService.SportsRecords
-                .Where(r => r.SportName.Equals(sport, StringComparison.OrdinalIgnoreCase))
+            var records = _context.SportsRecords
+                .ToList()
+                .Where(r => r.SportName != null && r.SportName.Equals(sport, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             ViewBag.Sport = sport;
@@ -62,11 +65,11 @@ namespace StudentManagement.Controllers
         // Show sports records for a specific student
         public IActionResult ByStudent(int studentId)
         {
-            var studentRecords = _dataService.SportsRecords
+            var studentRecords = _context.SportsRecords
                 .Where(r => r.StudentId == studentId)
                 .ToList();
 
-            var student = _dataService.Students.FirstOrDefault(s => s.Id == studentId);
+            var student = _context.Students.FirstOrDefault(s => s.Id == studentId);
 
             ViewBag.StudentName = student?.Name ?? "Unknown Student";
             ViewBag.StudentId = studentId;
@@ -81,7 +84,7 @@ namespace StudentManagement.Controllers
             // If studentId is provided, check if they have Creator role
             if (studentId.HasValue)
             {
-                var student = _dataService.Students.FirstOrDefault(s => s.Id == studentId.Value);
+                var student = _context.Students.FirstOrDefault(s => s.Id == studentId.Value);
 
                 if (student == null)
                 {
@@ -100,7 +103,8 @@ namespace StudentManagement.Controllers
             }
 
             // Filter students list to only show Creators
-            ViewBag.Students = _dataService.Students.Where(s => s.Role == "Creator").ToList();
+            var creators = _context.Students.Where(s => s.Role == "Creator").ToList();
+            ViewBag.Students = creators;
 
             return View();
         }
@@ -115,31 +119,26 @@ namespace StudentManagement.Controllers
                 record.HoursSpent <= 0)
             {
                 ViewBag.Error = "Please fill all required fields correctly.";
-                ViewBag.Students = _dataService.Students.Where(s => s.Role == "Creator").ToList();
+                ViewBag.Students = _context.Students.Where(s => s.Role == "Creator").ToList();
                 return View(record);
             }
 
             // IMPORTANT: Check if the student has Creator role
-            var student = _dataService.Students.FirstOrDefault(s => s.Id == record.StudentId);
+            var student = _context.Students.FirstOrDefault(s => s.Id == record.StudentId);
 
             if (student == null)
             {
                 ViewBag.Error = "Selected student not found.";
-                ViewBag.Students = _dataService.Students.Where(s => s.Role == "Creator").ToList();
+                ViewBag.Students = _context.Students.Where(s => s.Role == "Creator").ToList();
                 return View(record);
             }
 
             if (student.Role != "Creator")
             {
                 ViewBag.Error = $"{student.Name} does not have permission to create sports records. Only 'Creator' role can add records.";
-                ViewBag.Students = _dataService.Students.Where(s => s.Role == "Creator").ToList();
+                ViewBag.Students = _context.Students.Where(s => s.Role == "Creator").ToList();
                 return View(record);
             }
-
-            // Generate a new ID
-            record.Id = _dataService.SportsRecords.Count > 0
-                ? _dataService.SportsRecords.Max(r => r.Id) + 1
-                : 1;
 
             // Set the created date
             record.CreatedDate = DateTime.Now;
@@ -150,8 +149,9 @@ namespace StudentManagement.Controllers
                 record.ActivityDate = DateTime.Now;
             }
 
-            // Add to our list
-            _dataService.SportsRecords.Add(record);
+            // Add to database
+            _context.SportsRecords.Add(record);
+            _context.SaveChanges();
 
             // Redirect to the index page
             TempData["SuccessMessage"] = $"Sports record created successfully by {student.Name}!";

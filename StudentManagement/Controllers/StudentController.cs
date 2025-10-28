@@ -1,22 +1,22 @@
-using System.Reflection.Metadata.Ecma335;
 using Microsoft.AspNetCore.Mvc;
+using StudentManagement.Data;
 using StudentManagement.Models;
-using StudentManagement.Services;
 
 namespace StudentManagement.Controllers
 {
     public class StudentController : BaseController
     {
-        private readonly DataService _dataService;
+        private readonly ApplicationDbContext _context;
 
-        public StudentController(DataService dataService)
+        public StudentController(ApplicationDbContext context)
         {
-            _dataService = dataService;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View(_dataService.Students);
+            var students = _context.Students.ToList();
+            return View(students);
         }
 
         // NEW: Show students grouped by team
@@ -24,10 +24,9 @@ namespace StudentManagement.Controllers
         {
             // We'll pass BOTH students and teams to the view
             // For now, just pass students
-            return View(_dataService.Students);
+            var students = _context.Students.ToList();
+            return View(students);
         }
-        
-       
 
         // GET: Show form to create a new student
         [HttpGet]
@@ -35,7 +34,8 @@ namespace StudentManagement.Controllers
         {
             // Pass list of teams so Team Admin can select which team
             // (Later, we'll restrict this to only THEIR team)
-            ViewBag.Teams = _dataService.Teams;
+            var teams = _context.Teams.ToList();
+            ViewBag.Teams = teams;
             return View();
         }
 
@@ -49,29 +49,25 @@ namespace StudentManagement.Controllers
                 student.TeamId == 0)
             {
                 ViewBag.Error = "Name, Email, and Team are required fields.";
-                ViewBag.Teams = _dataService.Teams;
+                ViewBag.Teams = _context.Teams.ToList();
                 return View(student);
             }
-
-            // Generate a new ID
-            student.Id = _dataService.Students.Count > 0
-                ? _dataService.Students.Max(s => s.Id) + 1
-                : 1;
 
             // Set the enrollment date
             student.EnrollmentDate = DateTime.Now;
 
-            // Add to our list
-            _dataService.Students.Add(student);
+            // Add to database
+            _context.Students.Add(student);
+            _context.SaveChanges();
 
             // Get the team name for the success message
-            var team = _dataService.Teams.FirstOrDefault(t => t.Id == student.TeamId);
+            var team = _context.Teams.FirstOrDefault(t => t.Id == student.TeamId);
 
             // Show success message
             TempData["SuccessMessage"] = $"Student '{student.Name}' has been added to {team?.Name}!";
 
             // Redirect to the students list
             return RedirectToAction("Index");
-}
+        }
     }
 }

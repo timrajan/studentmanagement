@@ -1,4 +1,4 @@
-@model List<StudentManagement.Models.Team>
+@model IEnumerable<StudentManagement.Models.Team>
 
 @{
     var role = ViewBag.Role ?? "TeamAdmin";
@@ -139,7 +139,7 @@
     </div>
 </div>
 
-@if (Model.Count == 0)
+@if (!Model.Any())
 {
     <div class="no-teams">
         <p>No teams yet. Create your first team to get started!</p>
