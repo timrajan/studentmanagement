@@ -108,7 +108,7 @@ namespace StudentManagement.Controllers
         public IActionResult Create(StudyRecord record)
         {
             // Set the created date
-            record.CreatedDate = DateTime.Now;
+            record.CreatedDate = DateTime.UtcNow;
 
             // Trigger Azure DevOps Build Pipeline with captured values
             var (success, message) = _azureDevOpsService.TriggerBuildPipeline(record);

@@ -54,7 +54,7 @@ namespace StudentManagement.Controllers
             }
 
             // Set the enrollment date
-            student.EnrollmentDate = DateTime.Now;
+            student.EnrollmentDate = DateTime.UtcNow;
 
             // Add to database
             _context.Students.Add(student);

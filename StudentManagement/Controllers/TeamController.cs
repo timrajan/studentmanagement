@@ -83,7 +83,7 @@ namespace StudentManagement.Controllers
             }
 
             // Set the created date
-            team.CreatedDate = DateTime.Now;
+            team.CreatedDate = DateTime.UtcNow;
 
             // Add the team (EF will auto-generate the ID)
             _context.Teams.Add(team);
@@ -96,7 +96,7 @@ namespace StudentManagement.Controllers
                 Name = adminName,
                 Email = string.IsNullOrEmpty(adminEmail) ? $"{adminName.Replace(" ", "").ToLower()}@school.com" : adminEmail,
                 Username = "", // No Windows username by default
-                AddedDate = DateTime.Now
+                AddedDate = DateTime.UtcNow
             };
 
             _context.TeamAdmins.Add(newAdmin);
@@ -148,7 +148,7 @@ namespace StudentManagement.Controllers
                 Name = adminName,
                 Email = adminEmail,
                 Username = "", // No Windows username by default
-                AddedDate = DateTime.Now
+                AddedDate = DateTime.UtcNow
             };
 
             _context.TeamAdmins.Add(newAdmin);
@@ -246,7 +246,7 @@ namespace StudentManagement.Controllers
                 Name = name,
                 Email = $"{name.Replace(" ", "").ToLower()}@school.com",
                 TeamId = team.Id,
-                EnrollmentDate = DateTime.Now,
+                EnrollmentDate = DateTime.UtcNow,
                 Role = createAccess == "Yes" ? "Creator" : "Viewer"
             };
 

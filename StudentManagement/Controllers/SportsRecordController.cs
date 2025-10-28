@@ -141,12 +141,12 @@ namespace StudentManagement.Controllers
             }
 
             // Set the created date
-            record.CreatedDate = DateTime.Now;
+            record.CreatedDate = DateTime.UtcNow;
 
             // If ActivityDate wasn't set, use today
             if (record.ActivityDate == DateTime.MinValue)
             {
-                record.ActivityDate = DateTime.Now;
+                record.ActivityDate = DateTime.UtcNow;
             }
 
             // Add to database
