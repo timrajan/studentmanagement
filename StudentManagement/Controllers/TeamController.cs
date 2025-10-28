@@ -32,8 +32,8 @@ namespace StudentManagement.Controllers
             ViewBag.TeamAdmins = teamAdmins;
             ViewBag.Students = students;
 
-            // Show all teams
-            var allTeams = _context.Teams.ToList();
+            // Show all teams (distinct to avoid duplicates)
+            var allTeams = _context.Teams.Distinct().ToList();
             return View(allTeams);
         }
 
@@ -68,6 +68,17 @@ namespace StudentManagement.Controllers
             if (string.IsNullOrEmpty(team.Name))
             {
                 ViewBag.Error = "Team name is required.";
+                return View(team);
+            }
+
+            // Check if team name already exists
+            var existingTeam = _context.Teams
+                .ToList()
+                .FirstOrDefault(t => t.Name != null && t.Name.Equals(team.Name, StringComparison.OrdinalIgnoreCase));
+
+            if (existingTeam != null)
+            {
+                ViewBag.Error = $"A team with the name '{team.Name}' already exists. Please use a different name.";
                 return View(team);
             }
 
@@ -113,7 +124,8 @@ namespace StudentManagement.Controllers
 
         // GET: Show form to add another admin to an existing team
         [HttpGet]
-        public IActionResult AddAdmin(int teamId)
+        [Route("Team/AddAdmin/{id}")]
+        public IActionResult AddAdmin(int id)
         {
             // Check if user is SuperAdmin
             var role = ViewBag.Role as string;
@@ -123,10 +135,11 @@ namespace StudentManagement.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var team = _context.Teams.FirstOrDefault(t => t.Id == teamId);
+            var team = _context.Teams.FirstOrDefault(t => t.Id == id);
             if (team == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = $"Team with ID {id} not found.";
+                return RedirectToAction("Index");
             }
 
             ViewBag.Team = team;
@@ -135,8 +148,12 @@ namespace StudentManagement.Controllers
 
         // POST: Add a new admin to a team
         [HttpPost]
-        public IActionResult AddAdmin(int teamId, string adminName, string adminEmail)
+        [Route("Team/AddAdmin/{id}")]
+        public IActionResult AddAdmin(int id, [FromForm] string adminUsername)
         {
+            // Debug logging
+            Console.WriteLine($"DEBUG: id={id}, adminUsername='{adminUsername ?? "NULL"}'");
+
             // Check if user is SuperAdmin
             var role = ViewBag.Role as string;
             if (role != "SuperAdmin")
@@ -145,16 +162,17 @@ namespace StudentManagement.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var team = _context.Teams.FirstOrDefault(t => t.Id == teamId);
+            var team = _context.Teams.FirstOrDefault(t => t.Id == id);
             if (team == null)
             {
                 return NotFound();
             }
 
             // Validate
-            if (string.IsNullOrEmpty(adminName) || string.IsNullOrEmpty(adminEmail))
+            if (string.IsNullOrEmpty(adminUsername))
             {
-                ViewBag.Error = "Admin name and email are required.";
+                Console.WriteLine("DEBUG: adminUsername is empty or null");
+                ViewBag.Error = "Admin username is required.";
                 ViewBag.Team = team;
                 return View();
             }
@@ -162,17 +180,17 @@ namespace StudentManagement.Controllers
             // Create the new admin
             var newAdmin = new TeamAdmin
             {
-                TeamId = teamId,
-                Name = adminName,
-                Email = adminEmail,
-                Username = "", // No Windows username by default
+                TeamId = id,
+                Name = adminUsername,
+                Email = $"{adminUsername}@school.com",
+                Username = adminUsername,
                 AddedDate = DateTime.UtcNow
             };
 
             _context.TeamAdmins.Add(newAdmin);
             _context.SaveChanges();
 
-            TempData["SuccessMessage"] = $"{adminName} has been added as a Team Admin for '{team.Name}'!";
+            TempData["SuccessMessage"] = $"{adminUsername} has been added as a Team Admin for '{team.Name}'!";
 
             return RedirectToAction("Index");
         }
@@ -315,15 +333,26 @@ namespace StudentManagement.Controllers
             var currentUsername = Environment.UserName;
 
             // Find the team(s) that this admin manages
-            var adminRecord = _context.TeamAdmins
-                .ToList()
+            var allAdmins = _context.TeamAdmins.ToList();
+
+            Console.WriteLine($"DEBUG AddMember: currentUsername='{currentUsername}'");
+            Console.WriteLine($"DEBUG AddMember: Total TeamAdmins in DB: {allAdmins.Count}");
+            foreach (var admin in allAdmins)
+            {
+                Console.WriteLine($"  - Id={admin.Id}, Name='{admin.Name}', Username='{admin.Username}', TeamId={admin.TeamId}");
+            }
+
+            var adminRecord = allAdmins
                 .FirstOrDefault(ta => ta.Username != null && ta.Username.Equals(currentUsername, StringComparison.OrdinalIgnoreCase));
 
             if (adminRecord == null)
             {
+                Console.WriteLine($"DEBUG AddMember: No admin record found for username '{currentUsername}'");
                 ViewBag.Error = "You are not authorized to add team members. No team admin record found for your username.";
                 return View();
             }
+
+            Console.WriteLine($"DEBUG AddMember: Found admin record - Id={adminRecord.Id}, TeamId={adminRecord.TeamId}");
 
             // Get the team
             var team = _context.Teams.FirstOrDefault(t => t.Id == adminRecord.TeamId);

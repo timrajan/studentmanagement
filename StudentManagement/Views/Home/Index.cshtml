@@ -1,5 +1,6 @@
 @{
     var role = ViewBag.Role ?? "SuperAdmin";
+    var studentRole = ViewBag.StudentRole as string;
     ViewData["Title"] = role == "Student" ? "Student - Home Page" :
                         role == "TeamAdmin" ? "Team Admin - Home Page" :
                         "Super Admin - Home Page";
@@ -68,9 +69,25 @@
 <!-- Main Content -->
 <div class="home-container">
     <div class="cards-container">
-        <a href="/StudyRecord/Index" class="record-card">
-            <h2>Study Record</h2>
-        </a>
+        @if (studentRole == "Creator")
+        {
+            <a href="/StudyRecord/Index" class="record-card">
+                <h2>Study Record</h2>
+            </a>
+        }
+        else if (studentRole == "Viewer")
+        {
+            <a href="#" class="record-card disabled">
+                <h2>Study Record</h2>
+            </a>
+        }
+        else
+        {
+            <!-- For SuperAdmin and TeamAdmin -->
+            <a href="/StudyRecord/Index" class="record-card">
+                <h2>Study Record</h2>
+            </a>
+        }
 
         <a href="/SportsRecord/Index" class="record-card disabled">
             <h2>Sports Record</h2>

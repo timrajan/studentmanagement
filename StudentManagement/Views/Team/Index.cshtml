@@ -89,6 +89,23 @@
         cursor: pointer;
     }
 
+    .actions-cell {
+        text-align: center;
+        width: 120px;
+    }
+
+    .add-admin-link {
+        color: #4054B5;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .add-admin-link:hover {
+        color: #2f3f8f;
+        text-decoration: underline;
+    }
+
     .teams-table {
         margin-top: 40px;
         width: 100%;
@@ -117,7 +134,12 @@
         border-right: 1px solid #ddd;
     }
 
-    .teams-table td:last-child {
+    .teams-table th {
+        border-right: 1px solid #ddd;
+    }
+
+    .teams-table td:last-child,
+    .teams-table th:last-child {
         border-right: none;
     }
 
@@ -173,6 +195,7 @@ else
                     <tr>
                         <th>Name</th>
                         <th>Admins</th>
+                        <th class="actions-cell">Actions</th>
                         <th class="checkbox-cell">Select</th>
                     </tr>
                 </thead>
@@ -189,6 +212,9 @@ else
                         <tr>
                             <td class="team-name-cell">@team.Name</td>
                             <td class="admins-cell">@adminNames</td>
+                            <td class="actions-cell">
+                                <a href="/Team/AddAdmin/@team.Id" class="add-admin-link">Add Admin</a>
+                            </td>
                             <td class="checkbox-cell">
                                 <input type="checkbox" class="team-checkbox" name="teamIds" value="@team.Id" onchange="updateRemoveButtonState()" />
                             </td>
