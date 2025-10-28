@@ -147,7 +147,7 @@
         @if (role == "SuperAdmin")
         {
             <a href="/Team/Create" class="add-team-btn">Add Team</a>
-            <button id="removeTeamBtn" class="remove-team-btn" disabled onclick="window.location.href='/Team/Remove'">Remove Team</button>
+            <button id="removeTeamBtn" class="remove-team-btn" type="submit" form="removeTeamsForm" disabled>Remove Team</button>
         }
         else
         {
@@ -165,38 +165,59 @@
 }
 else
 {
-    <table class="teams-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>@(role == "SuperAdmin" ? "Admins" : "Team Members")</th>
-                @if (role == "SuperAdmin")
-                {
-                    <th class="checkbox-cell">Select</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var team in Model.OrderBy(t => t.Name))
-            {
-                @if (role == "SuperAdmin")
-                {
-                    @* SuperAdmin view: Show team admins *@
-                    var teamAdminsList = ((List<StudentManagement.Models.TeamAdmin>)ViewBag.TeamAdmins)
-                        .Where(a => a.TeamId == team.Id)
-                        .ToList();
-
-                    var adminNames = string.Join(", ", teamAdminsList.Select(a => a.Name));
-
+    @if (role == "SuperAdmin")
+    {
+        <form id="removeTeamsForm" method="post" action="/Team/RemoveSelected">
+            <table class="teams-table">
+                <thead>
                     <tr>
-                        <td class="team-name-cell">@team.Name</td>
-                        <td class="admins-cell">@adminNames</td>
-                        <td class="checkbox-cell">
-                            <input type="checkbox" class="team-checkbox" value="@team.Id" onchange="updateRemoveButtonState()" />
-                        </td>
+                        <th>Name</th>
+                        <th>Admins</th>
+                        <th class="checkbox-cell">Select</th>
                     </tr>
-                }
-                else
+                </thead>
+                <tbody>
+                    @foreach (var team in Model.OrderBy(t => t.Name))
+                    {
+                        @* SuperAdmin view: Show team admins *@
+                        var teamAdminsList = ((List<StudentManagement.Models.TeamAdmin>)ViewBag.TeamAdmins)
+                            .Where(a => a.TeamId == team.Id)
+                            .ToList();
+
+                        var adminNames = string.Join(", ", teamAdminsList.Select(a => a.Name));
+
+                        <tr>
+                            <td class="team-name-cell">@team.Name</td>
+                            <td class="admins-cell">@adminNames</td>
+                            <td class="checkbox-cell">
+                                <input type="checkbox" class="team-checkbox" name="teamIds" value="@team.Id" onchange="updateRemoveButtonState()" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </form>
+
+        <script>
+            function updateRemoveButtonState() {
+                const checkboxes = document.querySelectorAll('.team-checkbox');
+                const removeBtn = document.getElementById('removeTeamBtn');
+                const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+                removeBtn.disabled = !anyChecked;
+            }
+        </script>
+    }
+    else
+    {
+        <table class="teams-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Team Members</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var team in Model.OrderBy(t => t.Name))
                 {
                     @* TeamAdmin view: Show team members (students) *@
                     var teamStudents = ((List<StudentManagement.Models.Student>)ViewBag.Students)
@@ -210,19 +231,7 @@ else
                         <td class="admins-cell">@memberNames</td>
                     </tr>
                 }
-            }
-        </tbody>
-    </table>
-
-    @if (role == "SuperAdmin")
-    {
-        <script>
-            function updateRemoveButtonState() {
-                const checkboxes = document.querySelectorAll('.team-checkbox');
-                const removeBtn = document.getElementById('removeTeamBtn');
-                const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
-                removeBtn.disabled = !anyChecked;
-            }
-        </script>
+            </tbody>
+        </table>
     }
 }

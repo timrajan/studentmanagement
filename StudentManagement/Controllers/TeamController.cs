@@ -16,6 +16,14 @@ namespace StudentManagement.Controllers
         // GET: Show all teams
         public IActionResult Index()
         {
+            // Check if user is SuperAdmin
+            var role = ViewBag.Role as string;
+            if (role != "SuperAdmin")
+            {
+                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can access the Teams Management page.";
+                return RedirectToAction("Index", "Home");
+            }
+
             // Load teams with related data
             var teamAdmins = _context.TeamAdmins.ToList();
             var students = _context.Students.ToList();
@@ -24,29 +32,7 @@ namespace StudentManagement.Controllers
             ViewBag.TeamAdmins = teamAdmins;
             ViewBag.Students = students;
 
-            // Get the current user's role and username
-            var role = ViewBag.Role as string;
-            var currentUsername = Environment.UserName;
-
-            // If TeamAdmin, only show their own team
-            if (role == "TeamAdmin")
-            {
-                // Find the team(s) that this admin manages
-                var adminRecord = _context.TeamAdmins
-                    .ToList()
-                    .FirstOrDefault(ta => ta.Username != null && ta.Username.Equals(currentUsername, StringComparison.OrdinalIgnoreCase));
-
-                if (adminRecord != null)
-                {
-                    // Return only the teams this admin manages
-                    var adminTeams = _context.Teams
-                        .Where(t => t.Id == adminRecord.TeamId)
-                        .ToList();
-                    return View(adminTeams);
-                }
-            }
-
-            // For SuperAdmin or if no admin record found, show all teams
+            // Show all teams
             var allTeams = _context.Teams.ToList();
             return View(allTeams);
         }
@@ -55,6 +41,14 @@ namespace StudentManagement.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            // Check if user is SuperAdmin
+            var role = ViewBag.Role as string;
+            if (role != "SuperAdmin")
+            {
+                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can create teams.";
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -62,6 +56,14 @@ namespace StudentManagement.Controllers
         [HttpPost]
         public IActionResult Create(Team team, string adminName, string adminEmail)
         {
+            // Check if user is SuperAdmin
+            var role = ViewBag.Role as string;
+            if (role != "SuperAdmin")
+            {
+                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can create teams.";
+                return RedirectToAction("Index", "Home");
+            }
+
             // Validate team data
             if (string.IsNullOrEmpty(team.Name))
             {
@@ -113,6 +115,14 @@ namespace StudentManagement.Controllers
         [HttpGet]
         public IActionResult AddAdmin(int teamId)
         {
+            // Check if user is SuperAdmin
+            var role = ViewBag.Role as string;
+            if (role != "SuperAdmin")
+            {
+                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can add team admins.";
+                return RedirectToAction("Index", "Home");
+            }
+
             var team = _context.Teams.FirstOrDefault(t => t.Id == teamId);
             if (team == null)
             {
@@ -127,6 +137,14 @@ namespace StudentManagement.Controllers
         [HttpPost]
         public IActionResult AddAdmin(int teamId, string adminName, string adminEmail)
         {
+            // Check if user is SuperAdmin
+            var role = ViewBag.Role as string;
+            if (role != "SuperAdmin")
+            {
+                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can add team admins.";
+                return RedirectToAction("Index", "Home");
+            }
+
             var team = _context.Teams.FirstOrDefault(t => t.Id == teamId);
             if (team == null)
             {
@@ -163,6 +181,14 @@ namespace StudentManagement.Controllers
         [HttpGet]
         public IActionResult Remove()
         {
+            // Check if user is SuperAdmin
+            var role = ViewBag.Role as string;
+            if (role != "SuperAdmin")
+            {
+                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can remove teams.";
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -170,6 +196,14 @@ namespace StudentManagement.Controllers
         [HttpPost]
         public IActionResult Remove(string teamName)
         {
+            // Check if user is SuperAdmin
+            var role = ViewBag.Role as string;
+            if (role != "SuperAdmin")
+            {
+                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can remove teams.";
+                return RedirectToAction("Index", "Home");
+            }
+
             if (string.IsNullOrEmpty(teamName))
             {
                 ViewBag.Error = "Team name is required.";
@@ -197,6 +231,65 @@ namespace StudentManagement.Controllers
             _context.SaveChanges();
 
             TempData["SuccessMessage"] = $"Team '{teamName}' has been removed successfully!";
+            return RedirectToAction("Index");
+        }
+
+        // POST: Remove selected teams by IDs
+        [HttpPost]
+        public IActionResult RemoveSelected(List<int> teamIds)
+        {
+            // Check if user is SuperAdmin
+            var role = ViewBag.Role as string;
+            if (role != "SuperAdmin")
+            {
+                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can remove teams.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (teamIds == null || !teamIds.Any())
+            {
+                TempData["ErrorMessage"] = "No teams selected for removal.";
+                return RedirectToAction("Index");
+            }
+
+            // Get the teams to remove
+            var teamsToRemove = _context.Teams
+                .Where(t => teamIds.Contains(t.Id))
+                .ToList();
+
+            if (!teamsToRemove.Any())
+            {
+                TempData["ErrorMessage"] = "Selected teams not found.";
+                return RedirectToAction("Index");
+            }
+
+            // Remove all admins associated with these teams
+            var adminsToRemove = _context.TeamAdmins
+                .Where(a => teamIds.Contains(a.TeamId))
+                .ToList();
+            _context.TeamAdmins.RemoveRange(adminsToRemove);
+
+            // Remove all students associated with these teams
+            var studentsToRemove = _context.Students
+                .Where(s => teamIds.Contains(s.TeamId))
+                .ToList();
+
+            // Remove sports records for those students
+            var studentIds = studentsToRemove.Select(s => s.Id).ToList();
+            var sportsRecordsToRemove = _context.SportsRecords
+                .Where(sr => studentIds.Contains(sr.StudentId))
+                .ToList();
+            _context.SportsRecords.RemoveRange(sportsRecordsToRemove);
+
+            // Remove the students
+            _context.Students.RemoveRange(studentsToRemove);
+
+            // Remove the teams
+            _context.Teams.RemoveRange(teamsToRemove);
+            _context.SaveChanges();
+
+            var teamNames = string.Join(", ", teamsToRemove.Select(t => t.Name));
+            TempData["SuccessMessage"] = $"Teams removed successfully: {teamNames}";
             return RedirectToAction("Index");
         }
 
