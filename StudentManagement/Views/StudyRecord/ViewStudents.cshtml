@@ -38,7 +38,7 @@
     .form-row input[type="text"] {
         flex: 1;
         padding: 12px;
-        border: 2px solid #000;
+        border: 1px solid #000;
         border-radius: 4px;
         font-size: 16px;
         font-family: Arial, sans-serif;
@@ -54,7 +54,7 @@
         background-color: white;
         color: #000;
         padding: 12px 50px;
-        border: 2px solid #000;
+        border: 1px solid #000;
         border-radius: 25px;
         font-size: 18px;
         font-weight: bold;
@@ -67,6 +67,56 @@
 
     #dynamicFieldRow {
         display: none;
+    }
+
+    .results-container {
+        margin-top: 60px;
+        padding: 0 40px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .results-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 20px;
+    }
+
+    .results-table {
+        width: 80%;
+        max-width: 1200px;
+        border-collapse: collapse;
+        margin: 20px auto 0 auto;
+        text-align: left;
+    }
+
+    .results-table th {
+        background-color: #f5f5f5;
+        text-align: left;
+        padding: 15px;
+        font-weight: bold;
+        font-size: 16px;
+        color: #000;
+        border: 1px solid #ddd;
+    }
+
+    .results-table td {
+        padding: 12px 15px;
+        font-size: 14px;
+        color: #000;
+        border: 1px solid #ddd;
+    }
+
+    .results-table tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 30px;
+        color: #999;
+        font-size: 16px;
     }
 </style>
 
@@ -97,6 +147,42 @@
             </div>
         </form>
     </div>
+
+@if (ViewBag.Results != null)
+{
+    <div class="results-container">
+        <h2 class="results-title">Results for @ViewBag.FilterType: @ViewBag.FilterValue</h2>
+
+        @if (((List<StudentManagement.Models.StudyRecord>)ViewBag.Results).Count > 0)
+        {
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Email Address</th>
+                        <th>Student Initial ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var record in (List<StudentManagement.Models.StudyRecord>)ViewBag.Results)
+                    {
+                        <tr>
+                            <td>@record.FirstName</td>
+                            <td>@record.EmailAddress</td>
+                            <td>@record.StudentInitialID</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-results">
+                No records found matching your criteria.
+            </div>
+        }
+    </div>
+}
 
 <script>
     // Get user's team from server
@@ -133,9 +219,8 @@
             // Show dropdown with environment options
             dynamicLabel.textContent = 'Environment';
             dynamicDropdown.innerHTML = '<option value="">-- Select --</option>' +
-                                       '<option value="Dev">Dev</option>' +
-                                       '<option value="Test">Test</option>' +
-                                       '<option value="Prod">Prod</option>';
+                                       '<option value="AAA">AAA</option>' +
+                                       '<option value="BBB">BBB</option>';
             dynamicDropdown.style.display = 'block';
             dynamicTextbox.removeAttribute('name');
             dynamicDropdown.setAttribute('name', 'filterValue');
