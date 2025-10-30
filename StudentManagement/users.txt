@@ -4,8 +4,8 @@
 # The username should match your Windows login username
 
 # Example configurations:
-User1=TeamAdmin
-User=SuperAdmin
+User=TeamAdmin
+User1=SuperAdmin
 student1=Student
 
 # Add your Windows username below:

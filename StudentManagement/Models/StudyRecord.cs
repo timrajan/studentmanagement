@@ -5,24 +5,24 @@ namespace StudentManagement.Models
         public int Id { get; set; }
 
         // Left column fields
-        public string Team { get; set; } = string.Empty;
-        public string FirstName { get; set; } = string.Empty;
-        public string MiddleName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string DateOfBirth { get; set; } = string.Empty;
-        public string EmailAddress { get; set; } = string.Empty;
-        public string StudentIdentityID { get; set; } = string.Empty;
-        public string StudentInitialID { get; set; } = string.Empty;
+        public string? Team { get; set; }
+        public string? FirstName { get; set; }
+        public string? MiddleName { get; set; }
+        public string? LastName { get; set; }
+        public string? DateOfBirth { get; set; }
+        public string? EmailAddress { get; set; }
+        public string? StudentIdentityID { get; set; }
+        public string? StudentInitialID { get; set; }
 
         // Right column fields
-        public string Environment { get; set; } = string.Empty;
-        public string StudentIQLevel { get; set; } = string.Empty;
-        public string StudentRollNumber { get; set; } = string.Empty;
-        public string StudentRollName { get; set; } = string.Empty;
-        public string StudentParentEmailAddress { get; set; } = string.Empty;
-        public string Status { get; set; } = string.Empty;
-        public string Type { get; set; } = string.Empty;
-        public string Tags { get; set; } = string.Empty;
+        public string? Environment { get; set; }
+        public string? StudentIQLevel { get; set; }
+        public string? StudentRollNumber { get; set; }
+        public string? StudentRollName { get; set; }
+        public string? StudentParentEmailAddress { get; set; }
+        public string? Status { get; set; }
+        public string? Type { get; set; }
+        public string? Tags { get; set; }
 
         public DateTime CreatedDate { get; set; }
     }
