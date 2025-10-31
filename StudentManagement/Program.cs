@@ -9,7 +9,13 @@ builder.Services.AddControllersWithViews();
 
 // Add Entity Framework Core with PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    // Enable SQL logging to console
+    options.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
+    options.EnableSensitiveDataLogging(); // Shows parameter values in logs
+    options.EnableDetailedErrors();
+});
 
 // Add session support
 builder.Services.AddSession(options =>

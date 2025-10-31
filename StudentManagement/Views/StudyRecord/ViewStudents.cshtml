@@ -91,6 +91,12 @@
         text-align: left;
     }
 
+    .results-table th:nth-child(4),
+    .results-table td:nth-child(4) {
+        width: 40%;
+        min-width: 300px;
+    }
+
     .results-table th {
         background-color: #f5f5f5;
         text-align: left;
@@ -161,6 +167,8 @@
                         <th>First Name</th>
                         <th>Email Address</th>
                         <th>Student Initial ID</th>
+                        <th>Comments</th>
+                        <th>Modify</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -170,6 +178,10 @@
                             <td>@record.FirstName</td>
                             <td>@record.EmailAddress</td>
                             <td>@record.StudentInitialID</td>
+                            <td>@record.Comments</td>
+                            <td style="text-align: center;">
+                                <a href="/StudyRecord/Edit/@record.Id" class="edit-btn">Edit</a>
+                            </td>
                         </tr>
                     }
                 </tbody>
