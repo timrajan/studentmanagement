@@ -11,19 +11,26 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/StudentManagement.styles.css" asp-append-version="true" />
     <style>
-        body {
+        html, body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
             min-height: 100vh;
+            width: 100%;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
+            min-width: 100%;
         }
 
         .top-nav {
             background-color: #2E2B5F;
             padding: 15px 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 100%;
+            min-width: 100%;
         }
 
         .top-nav .container-fluid {
@@ -68,6 +75,8 @@
         .header-banner {
             background: linear-gradient(135deg, #4054B5 0%, #5B6FD8 100%);
             height: 100px;
+            width: 100%;
+            min-width: 100%;
         }
 
         .main-content {
@@ -76,6 +85,7 @@
             margin: 0 auto;
             flex: 1;
             width: 100%;
+            min-width: fit-content;
         }
 
         .back-button {
@@ -104,6 +114,8 @@
             padding: 20px 0;
             margin-top: auto;
             font-size: 14px;
+            width: 100%;
+            min-width: 100%;
         }
 
         footer .container-fluid {
