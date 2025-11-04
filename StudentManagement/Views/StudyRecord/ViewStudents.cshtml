@@ -93,8 +93,14 @@
 
     .results-table th:nth-child(4),
     .results-table td:nth-child(4) {
-        width: 40%;
-        min-width: 300px;
+        width: 35%;
+        min-width: 250px;
+    }
+
+    .results-table th:nth-child(5),
+    .results-table td:nth-child(5) {
+        width: 120px;
+        white-space: nowrap;
     }
 
     .results-table th {
@@ -147,6 +153,17 @@
         color: #999;
         font-size: 16px;
     }
+
+    .edit-btn {
+        color: #4054B5;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 5px 10px;
+    }
+
+    .edit-btn:hover {
+        text-decoration: underline;
+    }
 </style>
 
 <div class="container">
@@ -191,6 +208,7 @@
                         <th class="sortable" onclick="sortTable(1)">Email Address</th>
                         <th class="sortable" onclick="sortTable(2)">Student Initial ID</th>
                         <th class="sortable" onclick="sortTable(3)">Comments</th>
+                        <th class="sortable" onclick="sortTable(4)">Created Date</th>
                         <th>Modify</th>
                     </tr>
                 </thead>
@@ -202,6 +220,7 @@
                             <td>@record.EmailAddress</td>
                             <td>@record.StudentInitialID</td>
                             <td>@record.Comments</td>
+                            <td>@record.CreatedDate.ToString("dd-MM-yyyy")</td>
                             <td style="text-align: center;">
                                 <a href="/StudyRecord/Edit/@record.Id" class="edit-btn">Edit</a>
                             </td>
