@@ -94,6 +94,7 @@ namespace StudentManagement.Data
                 entity.Property(e => e.Status).HasColumnName("status").HasMaxLength(50);
                 entity.Property(e => e.Type).HasColumnName("type").HasMaxLength(50);
                 entity.Property(e => e.Tags).HasColumnName("tags").HasMaxLength(200);
+                entity.Property(e => e.Release).HasColumnName("release").HasMaxLength(100);
                 entity.Property(e => e.Comments).HasColumnName("comments").HasMaxLength(200);
                 entity.Property(e => e.CreatedDate).HasColumnName("created_date");
             });

@@ -248,13 +248,7 @@ namespace StudentManagement.Controllers
         {
             var record = _context.StudyRecords.ToList().FirstOrDefault(r => r.Id == id);
             if (record == null)
-            {
-                return NotFound();
-            }
 
-            // Update only the Comments field
-            record.Comments = Comments;
-            _context.SaveChanges();
 
             TempData["SuccessMessage"] = "Study record updated successfully!";
             return RedirectToAction("ViewStudents");

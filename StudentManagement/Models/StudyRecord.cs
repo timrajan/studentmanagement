@@ -23,6 +23,7 @@ namespace StudentManagement.Models
         public string? Status { get; set; }
         public string? Type { get; set; }
         public string? Tags { get; set; }
+        public string? Release { get; set; }
         public string? Comments { get; set; }
 
         public DateTime CreatedDate { get; set; }
