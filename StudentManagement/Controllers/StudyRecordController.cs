@@ -83,21 +83,15 @@ namespace StudentManagement.Controllers
 
             if (teamAdmin != null)
             {
-                // Map TeamId to team name (teamA
-                var teamName = teamAdmin.TeamId switch
-                {
-                    1 => "teamA",
-                    2 => "teamB",
-                    3 => "teamC",
-                    _ => "teamA"
-                };
-
-                ViewBag.UserTeam = teamName;
+                // Get the actual team name from the database
+                var team = _context.Teams.FirstOrDefault(t => t.Id == teamAdmin.TeamId);
+                ViewBag.UserTeam = team?.Name ?? "teamA";
             }
             else
             {
-                // Default to teamA if user not found
-                ViewBag.UserTeam = "teamA";
+                // Default to first team if user not found
+                var defaultTeam = _context.Teams.FirstOrDefault();
+                ViewBag.UserTeam = defaultTeam?.Name ?? "teamA";
             }
 
             return View();
@@ -107,6 +101,50 @@ namespace StudentManagement.Controllers
         [HttpPost]
         public IActionResult Create(StudyRecord record)
         {
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(record.Team) ||
+                string.IsNullOrWhiteSpace(record.Environment) ||
+                string.IsNullOrWhiteSpace(record.FirstName) ||
+                string.IsNullOrWhiteSpace(record.StudentIQLevel) ||
+                string.IsNullOrWhiteSpace(record.MiddleName) ||
+                string.IsNullOrWhiteSpace(record.StudentRollNumber) ||
+                string.IsNullOrWhiteSpace(record.LastName) ||
+                string.IsNullOrWhiteSpace(record.StudentRollName) ||
+                string.IsNullOrWhiteSpace(record.DateOfBirth) ||
+                string.IsNullOrWhiteSpace(record.StudentParentEmailAddress) ||
+                string.IsNullOrWhiteSpace(record.EmailAddress) ||
+                string.IsNullOrWhiteSpace(record.Status) ||
+                string.IsNullOrWhiteSpace(record.StudentIdentityID) ||
+                string.IsNullOrWhiteSpace(record.Type) ||
+                string.IsNullOrWhiteSpace(record.StudentInitialID) ||
+                string.IsNullOrWhiteSpace(record.Tags) ||
+                string.IsNullOrWhiteSpace(record.Release) ||
+                string.IsNullOrWhiteSpace(record.Comments))
+            {
+                TempData["ErrorMessage"] = "Missing Mandatory study record data";
+
+                // Get user's team again for the view
+                string username = ViewBag.Username?.ToString() ?? Environment.UserName;
+                var teamAdmin = _context.TeamAdmins
+                    .ToList()
+                    .FirstOrDefault(ta => ta.Username != null && ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+                if (teamAdmin != null)
+                {
+                    // Get the actual team name from the database
+                    var team = _context.Teams.FirstOrDefault(t => t.Id == teamAdmin.TeamId);
+                    ViewBag.UserTeam = team?.Name ?? "teamA";
+                }
+                else
+                {
+                    // Default to first team if user not found
+                    var defaultTeam = _context.Teams.FirstOrDefault();
+                    ViewBag.UserTeam = defaultTeam?.Name ?? "teamA";
+                }
+
+                return View(record);
+            }
+
             // Set the created date
             record.CreatedDate = DateTime.UtcNow;
 
@@ -144,21 +182,15 @@ namespace StudentManagement.Controllers
 
             if (teamAdmin != null)
             {
-                // Map TeamId to team name (teamA, teamB, teamC)
-                var teamName = teamAdmin.TeamId switch
-                {
-                    1 => "teamA",
-                    2 => "teamB",
-                    3 => "teamC",
-                    _ => "teamA"
-                };
-
-                ViewBag.UserTeam = teamName;
+                // Get the actual team name from the database
+                var team = _context.Teams.FirstOrDefault(t => t.Id == teamAdmin.TeamId);
+                ViewBag.UserTeam = team?.Name ?? "teamA";
             }
             else
             {
-                // Default to teamA if user not found
-                ViewBag.UserTeam = "teamA";
+                // Default to first team if user not found
+                var defaultTeam = _context.Teams.FirstOrDefault();
+                ViewBag.UserTeam = defaultTeam?.Name ?? "teamA";
             }
 
             return View();
@@ -178,18 +210,15 @@ namespace StudentManagement.Controllers
 
             if (teamAdmin != null)
             {
-                var teamName = teamAdmin.TeamId switch
-                {
-                    1 => "teamA",
-                    2 => "teamB",
-                    3 => "teamC",
-                    _ => "teamA"
-                };
-                ViewBag.UserTeam = teamName;
+                // Get the actual team name from the database
+                var team = _context.Teams.FirstOrDefault(t => t.Id == teamAdmin.TeamId);
+                ViewBag.UserTeam = team?.Name ?? "teamA";
             }
             else
             {
-                ViewBag.UserTeam = "teamA";
+                // Default to first team if user not found
+                var defaultTeam = _context.Teams.FirstOrDefault();
+                ViewBag.UserTeam = defaultTeam?.Name ?? "teamA";
             }
 
             // Query the database based on filterType and filterValue
@@ -248,7 +277,13 @@ namespace StudentManagement.Controllers
         {
             var record = _context.StudyRecords.ToList().FirstOrDefault(r => r.Id == id);
             if (record == null)
+            {
+                return NotFound();
+            }
 
+            // Update only the Comments field
+            record.Comments = Comments;
+            _context.SaveChanges();
 
             TempData["SuccessMessage"] = "Study record updated successfully!";
             return RedirectToAction("ViewStudents");
