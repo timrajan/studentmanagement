@@ -48,6 +48,8 @@ namespace StudentManagement.Services
                         },
                         templateParameters = new
                         {
+                            // IMPORTANT: Pass the record ID so webhook can update the correct record
+                            recordId = record.Id.ToString(),
                             // Map form fields to pipeline parameters
                             team = record.Team ?? "",
                             firstName = record.FirstName ?? "",
@@ -64,7 +66,8 @@ namespace StudentManagement.Services
                             studentParentEmailAddress = record.StudentParentEmailAddress ?? "",
                             status = record.Status ?? "",
                             type = record.Type ?? "",
-                            tags = record.Tags ?? ""
+                            tags = record.Tags ?? "",
+                            release = record.Release ?? ""
                         }
                     };
 
