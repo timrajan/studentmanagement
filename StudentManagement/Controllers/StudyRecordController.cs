@@ -22,6 +22,15 @@ namespace StudentManagement.Controllers
             return View();
         }
 
+        // API endpoint to get the next available study record ID
+        [HttpGet]
+        public JsonResult GetNextStudyRecordId()
+        {
+            var maxId = _context.StudyRecords.Max(r => (int?)r.Id) ?? 0;
+            var nextId = maxId + 1;
+            return Json(new { nextId = nextId });
+        }
+
         // Show all study records
         public IActionResult AllRecords()
         {
@@ -148,6 +157,17 @@ namespace StudentManagement.Controllers
             // Set the created date
             record.CreatedDate = DateTime.UtcNow;
 
+            // Add to database first to get the auto-generated ID
+            _context.StudyRecords.Add(record);
+            _context.SaveChanges();
+
+            // Now generate the email address using the actual assigned ID
+            var formattedId = record.Id.ToString("D3"); // Format with leading zeros (001, 002, etc.)
+            record.EmailAddress = $"{record.Team}-{record.Environment}-{record.Type}-{formattedId}@gmail.com";
+
+            // Update the record with the generated email
+            _context.SaveChanges();
+
             // Trigger Azure DevOps Build Pipeline with captured values
             var (success, message) = _azureDevOpsService.TriggerBuildPipeline(record);
 
@@ -159,10 +179,6 @@ namespace StudentManagement.Controllers
             {
                 TempData["ErrorMessage"] = message;
             }
-
-            // Add to database
-            _context.StudyRecords.Add(record);
-            _context.SaveChanges();
 
             // Redirect to the index page
             return RedirectToAction("Index");
