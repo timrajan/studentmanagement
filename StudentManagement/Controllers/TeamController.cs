@@ -13,14 +13,14 @@ namespace StudentManagement.Controllers
             _context = context;
         }
 
-        // GET: Show all teams
-        public IActionResult Index()
+        // GET: Teams Management - Create/Delete Teams (SuperAdmin only)
+        public IActionResult TeamsManagement()
         {
             // Check if user is SuperAdmin
             var role = ViewBag.Role as string;
             if (role != "SuperAdmin")
             {
-                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can access the Teams Management page.";
+                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can access Teams Management.";
                 return RedirectToAction("Index", "Home");
             }
 
@@ -34,7 +34,61 @@ namespace StudentManagement.Controllers
 
             // Show all teams (distinct to avoid duplicates)
             var allTeams = _context.Teams.Distinct().ToList();
-            return View(allTeams);
+            return View("Index", allTeams);
+        }
+
+        // GET: Team Management - Add/Remove Team Members (TeamAdmin ONLY)
+        public IActionResult TeamManagement()
+        {
+            Console.WriteLine("Hellllo");
+            var role = ViewBag.Role as string;
+            Console.WriteLine(role);
+            // Only TeamAdmin can access Team Management
+            if (role != "TeamAdmin")
+            {
+                TempData["ErrorMessage"] = "Access denied. Only Team Admins can access Team Management.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Get current user's team
+            var username = ViewBag.Username?.ToString() ?? Environment.UserName;
+            var adminRecord = _context.TeamAdmins
+                .ToList()
+                .FirstOrDefault(ta => ta.Username != null && ta.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+            if (adminRecord == null)
+            {
+                TempData["ErrorMessage"] = "No team admin record found for your username.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Get team info and students
+            var team = _context.Teams.FirstOrDefault(t => t.Id == adminRecord.TeamId);
+            var students = _context.Students.Where(s => s.TeamId == adminRecord.TeamId).ToList();
+
+            ViewBag.TeamName = team?.Name;
+            ViewBag.TeamId = adminRecord.TeamId;
+
+            return View("TeamAdminIndex", students);
+        }
+
+        // Legacy Index action - redirect to appropriate page based on role
+        public IActionResult Index()
+        {
+            var role = ViewBag.Role as string;
+            if (role == "SuperAdmin")
+            {
+                return RedirectToAction("TeamsManagement");
+            }
+            else if (role == "TeamAdmin")
+            {
+                return RedirectToAction("TeamManagement");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Access denied.";
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // GET: Show the form to create a new team
@@ -377,7 +431,7 @@ namespace StudentManagement.Controllers
 
             TempData["SuccessMessage"] = $"{name} has been added to {team.Name} with {(createAccess == "Yes" ? "Creator" : "Viewer")} access!";
 
-            return RedirectToAction("Index");
+            return RedirectToAction("TeamManagement");
         }
 
         // GET: Show form to remove a team member
@@ -440,7 +494,7 @@ namespace StudentManagement.Controllers
             _context.SaveChanges();
 
             TempData["SuccessMessage"] = $"Team member '{name}' has been removed successfully!";
-            return RedirectToAction("Index");
+            return RedirectToAction("TeamManagement");
         }
     }
 }

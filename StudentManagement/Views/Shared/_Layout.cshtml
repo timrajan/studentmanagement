@@ -225,12 +225,12 @@
                     <li><a asp-controller="Home" asp-action="Index">Home</a></li>
                     @if (role == "SuperAdmin")
                     {
-                        <li><a asp-controller="Team" asp-action="Index">Teams Management</a></li>
+                        <li><a asp-controller="Team" asp-action="TeamsManagement">Teams Management</a></li>
                         <li><a asp-controller="Student" asp-action="Index">User Management</a></li>
                     }
                     else if (role == "TeamAdmin")
                     {
-                        <li><a asp-controller="Team" asp-action="Index">Team Management</a></li>
+                        <li><a asp-controller="Team" asp-action="TeamManagement">User Management</a></li>
                     }
                 </ul>
                 <div class="user-info">

@@ -13,9 +13,34 @@ namespace StudentManagement.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? teamId)
         {
-            var students = _context.Students.ToList();
+            // Check if user is SuperAdmin
+            var role = ViewBag.Role as string;
+            if (role != "SuperAdmin")
+            {
+                TempData["ErrorMessage"] = "Access denied. Only SuperAdmins can access User Management.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Get all teams for dropdown
+            var teams = _context.Teams.ToList();
+            ViewBag.Teams = teams;
+
+            // Get students filtered by team if teamId is provided
+            List<Student> students;
+            if (teamId.HasValue && teamId.Value > 0)
+            {
+                students = _context.Students.Where(s => s.TeamId == teamId.Value).ToList();
+                ViewBag.SelectedTeamId = teamId.Value;
+            }
+            else
+            {
+                // Show all students if no team selected
+                students = _context.Students.ToList();
+                ViewBag.SelectedTeamId = 0;
+            }
+
             return View(students);
         }
 
@@ -67,6 +92,29 @@ namespace StudentManagement.Controllers
             TempData["SuccessMessage"] = $"Student '{student.Name}' has been added to {team?.Name}!";
 
             // Redirect to the students list
+            return RedirectToAction("Index");
+        }
+
+        // POST: Delete a student
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var student = _context.Students.FirstOrDefault(s => s.Id == id);
+            if (student == null)
+            {
+                TempData["ErrorMessage"] = "Student not found.";
+                return RedirectToAction("Index");
+            }
+
+            // Remove sports records for this student
+            var sportsRecords = _context.SportsRecords.Where(sr => sr.StudentId == id).ToList();
+            _context.SportsRecords.RemoveRange(sportsRecords);
+
+            // Remove the student
+            _context.Students.Remove(student);
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = $"User '{student.Name}' has been deleted successfully!";
             return RedirectToAction("Index");
         }
     }
